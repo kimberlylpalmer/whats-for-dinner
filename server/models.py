@@ -1,5 +1,6 @@
-#models.py
+# models.py
 
+from codecs import backslashreplace_errors
 from config import *
 
 from sqlalchemy_serializer import SerializerMixin
@@ -16,21 +17,29 @@ import re
 
 # Models go here!
 
+
 class User(db.Model, SerializerMixin):
-    __tablename__ = 'users'
-    
+    __tablename__ = "users"
+
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String, unique=True, nullable=False)
     email = db.Column(db.String, unique=True, nullable=False)
     _password_hash = db.Column(db.String, nullable=False)
-    
+    first_name = db.Column(db.String, nullable=False)
+    last_name = db.Column(db.String, nullable=False)
+
     # Relationship
-    recipes = db.relationship('Recipe', secondary='user_recipes', back_populates='users', cascade='all')
-    
+    recipes = db.relationship(
+        "Recipe", secondary="user_recipes", back_populates="users", cascade="all"
+    )
+    authored_recipes = db.relationship("Recipe", back_populates="author")
+    favorite_recipes = db.relationship("Recipe", secondary='user_favorites', back_populates='favorited_by')
+    calendar_entries = db.relationship("CalendarRecipe", back_populates="user")
+
     # Serialization rules
-    serialize_rules = ('-recipes.users', '-calendar.user')
-    
-    #Validations
+    serialize_rules = ("-recipes.users", "-calendar.user")
+
+    # Validations
     @validates("username")
     def validate_username(self, key, username):
         if not isinstance(username, str):
@@ -39,7 +48,7 @@ class User(db.Model, SerializerMixin):
         if existing_user:
             raise ValueError("Username must be unique.")
         return username
-    
+
     @validates("email")
     def validate_email(self, key, email):
         if not isinstance(email, str):
@@ -48,10 +57,10 @@ class User(db.Model, SerializerMixin):
         if existing_user:
             raise ValueError("Email must be unique.")
         return email
-    
+
     @hybrid_property
     def password_hash(self):
-        raise AttributeError("Password hashes are private.")  
+        raise AttributeError("Password hashes are private.")
         # return self._password_hash
 
     @password_hash.setter
@@ -68,26 +77,29 @@ class User(db.Model, SerializerMixin):
 
     def __repr__(self):
         return f"User {self.username}"
-    
-    
+
 
 class Recipe(db.Model, SerializerMixin):
-    __tablename__ = 'recipes'
+    __tablename__ = "recipes"
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100), nullable=False)
     # cooking_time = db.Column(db.Integer)
-    meal_type_id = db.Column(db.Integer, ForeignKey('meal_types.id'))
+    meal_type_id = db.Column(db.Integer, ForeignKey("meal_types.id"))
     cooking_time = db.Column(Time)
-    
-    #Relationship
-    meal_type = db.relationship('MealType', back_populates='recipes')
-    ingredients = db.relationship('Ingredient', secondary='recipe_ingredients', back_populates='recipes')
-    users = db.relationship('User', secondary='user_recipes', back_populates='recipes')
-    
+    author_id = db.Column(db.Integer, ForeignKey("users.id"))
+
+    # Relationship
+    meal_type = db.relationship("MealType", back_populates="recipes")
+    ingredients = db.relationship("Ingredient", secondary="recipe_ingredients",back_populates="recipes")
+    users = db.relationship("User", secondary="user_recipes", back_populates="recipes")
+    author = db.relationship("User", back_populates="authored_recipes")
+    favorited_by = db.relationship('User', secondary='user_favorites', back_populates='favorite_recipes')
+    calendar_entries = db.relationship("CalendarRecipe", back_populates="recipe")
+
     # Serialization rules
-    serialize_rules = ('-users.recipes', '-ingredients.recipes', '-meal_type.recipes')
-    
-    #Validations
+    serialize_rules = ("-users.recipes", "-ingredients.recipes", "-meal_type.recipes")
+
+    # Validations
     @validates("title")
     def validate_title(self, key, title):
         if not isinstance(title, str):
@@ -97,73 +109,84 @@ class Recipe(db.Model, SerializerMixin):
         if Recipe.query.filter(Recipe.title == title).first():
             raise ValueError("The titme must be unique.")
         return title
-    
-    @validates('cooking_time')
+
+    @validates("cooking_time")
     def validate_cooking_time(self, key, cooking_time):
         if not isinstance(cooking_time, Time):
             raise ValueError("Cooking time must be a valid time object.")
         return cooking_time
-    
+
     @validates("meal_type_id")
     def validate_meal_type(self, key, meal_type_id):
         if not meal_type_id:
             raise ValueError("Meal type must be provided.")
         if not MealType.query.get(meal_type_id):
             raise ValueError("Meal type must exist.")
-        return meal_type_id    
+        return meal_type_id
+
 
 class Ingredient(db.Model, SerializerMixin):
-    __tablename__ = 'ingredients'
+    __tablename__ = "ingredients"
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable=False)
     measurement = db.Column(db.String)
-    
-    #Relationship
-    recipes = db.relationship('Recipe', secondary='recipe_ingredients', back_populates='ingredients')
-    
-    #Serialization rules
-    serialize_rules = ('-recipes.ingredients',)
-    
-    #Validations
+
+    # Relationship
+    recipes = db.relationship(
+        "Recipe", secondary="recipe_ingredients", back_populates="ingredients"
+    )
+
+    # Serialization rules
+    serialize_rules = ("-recipes.ingredients",)
+
+    # Validations
     @validates("name")
     def validate_name(self, key, name):
         if not isinstance(name, str):
             raise ValueError("Recipe name must be a string.")
         return name
-    
+
     @validates("measurement")
     def validate_name(self, key, measurement):
         if not isinstance(measurement, str):
             raise ValueError("Measurement of ingredient must be a string.")
-        
-        fraction_pattern = r'^\d+/\d+$'
-        number_pattern = r'^\d+(\.\d+)?$'
-        known_units = ['cup', 'teaspoon', 'tablespoon', 'ml', 'l', 'g', 'kg', 'oz']
-        unit_pattern = r'^\d+(\.\d+)?\s*(' + '|'.join(known_units) + ')$'
-        
-        descriptive_measurements = ['pinch', 'to taste', 'as needed', 'handful', 'splash', 'dash']
-        
-        if not (measurement in descriptive_measurements or
-                re.match(number_pattern, measurement) or
-                re.match(fraction_pattern, measurement) or
-                re.match(unit_pattern, measurement)):
+
+        fraction_pattern = r"^\d+/\d+$"
+        number_pattern = r"^\d+(\.\d+)?$"
+        known_units = ["cup", "teaspoon", "tablespoon", "ml", "l", "g", "kg", "oz"]
+        unit_pattern = r"^\d+(\.\d+)?\s*(" + "|".join(known_units) + ")$"
+
+        descriptive_measurements = [
+            "pinch",
+            "to taste",
+            "as needed",
+            "handful",
+            "splash",
+            "dash",
+        ]
+
+        if not (
+            measurement in descriptive_measurements
+            or re.match(number_pattern, measurement)
+            or re.match(fraction_pattern, measurement)
+            or re.match(unit_pattern, measurement)
+        ):
             raise ValueError("Invalid measurement format.")
-        
+
         return measurement
-    
-    
+
 
 class MealType(db.Model, SerializerMixin):
-    __tablename__ = 'meal_types'
+    __tablename__ = "meal_types"
     id = db.Column(db.Integer, primary_key=True)
     type = db.Column(db.String, nullable=False)
-    
-    #Relationship
-    recipes = db.relationship('Recipe', back_populates='meal_type')
-    
-    #Serialization rules
-    serialize_rules = ('-recipes.meal_type',)
-    
+
+    # Relationship
+    recipes = db.relationship("Recipe", back_populates="meal_type")
+
+    # Serialization rules
+    serialize_rules = ("-recipes.meal_type",)
+
     @validates("type")
     def validate(self, key, type):
         if not isinstance(type, str):
@@ -171,56 +194,71 @@ class MealType(db.Model, SerializerMixin):
         if not type.strip():
             raise ValueError("Meal Type must not be blank")
         return type
-    
+
+
 class CalendarRecipe(db.Model, SerializerMixin):
-    __tablename__ = 'calendar_recipes'
-    calendar_id = db.Column(db.Integer, ForeignKey('calendars.id'), primary_key=True)
-    recipe_id = db.Column(db.Integer, ForeignKey('recipes.id'), primary_key=True)
-        
+    __tablename__ = "calendar_recipes"
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, ForeignKey("users.id"))
+    # calendar_id = db.Column(db.Integer, ForeignKey("calendars.id"))
+    recipe_id = db.Column(db.Integer, ForeignKey("recipes.id"))
+    date = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    # calendar = db.relationship('Calendar', back_populates='recipes')
+    user = db.relationship('User', back_populates='calendar_entries')
+    recipe = db.relationship('Recipe', back_populates='calendar_entries')
+
 
 class Calendar(db.Model, SerializerMixin):
-    __tablename__ = 'calendars'
+    __tablename__ = "calendars"
     id = db.Column(db.Integer, primary_key=True)
     date = db.Column(db.DateTime, nullable=False)
-    user_id = db.Column(db.Integer, ForeignKey('users.id'))
-    
-    #Relationship
-    user = db.relationship('User', back_populates='calendars')
-    recipes = db.relationship('Recipe', secondary='calendar_recipes', backref='calendars')
-    
-    #Serialization rules
-    serialize_rules = ('-user.calendars', '-recipes.calendars')
-    
-    #Validations
-    @validates('date')
+    user_id = db.Column(db.Integer, ForeignKey("users.id"))
+
+    # Relationship
+    user = db.relationship("User", back_populates="calendars")
+    recipes = db.relationship(
+        "Recipe", secondary="calendar_recipes", back_populates="calendars"
+    )
+
+    # Serialization rules
+    serialize_rules = ("-user.calendars", "-recipes.calendars")
+
+    # Validations
+    @validates("date")
     def validate_date(self, key, date):
         if not isinstance(date, datetime):
             raise ValueError("Date must be a valid datetime object.")
         return date
-    
+
     @validates("user_id")
     def validate_user_id(self, key, user_id):
         if not User.query.get(user_id):
             raise ValueError("User must exist.")
         return user_id
-    
-    
+
 
 # Association tables
 class UserRecipe(db.Model, SerializerMixin):
-    __tablename__ = 'user_recipes'
+    __tablename__ = "user_recipes"
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, ForeignKey('users.id'))
-    recipe_id = db.Column(db.Integer, ForeignKey('recipes.id'))
-    
-    #Serialization rules
-    serialize_rules = ('-user', '-recipe')
+    user_id = db.Column(db.Integer, ForeignKey("users.id"))
+    recipe_id = db.Column(db.Integer, ForeignKey("recipes.id"))
+
+    # Serialization rules
+    serialize_rules = ("-user", "-recipe")
+
 
 class RecipeIngredient(db.Model, SerializerMixin):
-    __tablename__ = 'recipe_ingredients'
+    __tablename__ = "recipe_ingredients"
     id = db.Column(db.Integer, primary_key=True)
-    recipe_id = db.Column(db.Integer, ForeignKey('recipes.id'))
-    ingredient_id = db.Column(db.Integer, ForeignKey('ingredients.id'))
+    recipe_id = db.Column(db.Integer, ForeignKey("recipes.id"))
+    ingredient_id = db.Column(db.Integer, ForeignKey("ingredients.id"))
+
+    # Serialization rules
+    serialize_rules = ("-recipe", "-ingredient")
     
-    #Serialization rules
-    serialize_rules = ('-recipe', '-ingredient')
+class UserFavorite(db.Model, SerializerMixin):
+    __tablename__ = 'user_favorites'
+    user_id = db.Column(db.Integer, ForeignKey('users.id'), primary_key=True)
+    recipe_id = db.Column(db.Integer, ForeignKey('recipes.id'), primary_key=True)
