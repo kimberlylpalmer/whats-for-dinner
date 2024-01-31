@@ -1,16 +1,14 @@
 # models.py
-
-from codecs import backslashreplace_errors
 from config import *
 
 from sqlalchemy_serializer import SerializerMixin
 from sqlalchemy.ext.associationproxy import association_proxy
+from sqlalchemy.ext.hybrid import hybrid_property
+from sqlalchemy.orm import relationship, validates
 
 from sqlalchemy import Column, Integer, String, ForeignKey, DateTime
 from sqlalchemy.types import Time
 from datetime import datetime
-from sqlalchemy.ext.hybrid import hybrid_property
-from sqlalchemy.orm import relationship, validates
 
 import bcrypt
 import re
@@ -29,15 +27,14 @@ class User(db.Model, SerializerMixin):
     last_name = db.Column(db.String, nullable=False)
 
     # Relationship
-    recipes = db.relationship(
-        "Recipe", secondary="user_recipes", back_populates="users", cascade="all"
-    )
+    recipes = db.relationship(        "Recipe", secondary="user_recipes", back_populates="users", cascade="all")
     authored_recipes = db.relationship("Recipe", back_populates="author")
     favorite_recipes = db.relationship("Recipe", secondary='user_favorites', back_populates='favorited_by')
     calendar_entries = db.relationship("CalendarRecipe", back_populates="user")
+    calendars = db.relationship('Calendar', back_populates='user')
 
     # Serialization rules
-    serialize_rules = ("-recipes.users", "-calendar.user")
+    serialize_rules = ("-recipes.users", "-calendar_entries.user")
 
     # Validations
     @validates("username")
@@ -78,12 +75,10 @@ class User(db.Model, SerializerMixin):
     def __repr__(self):
         return f"User {self.username}"
 
-
 class Recipe(db.Model, SerializerMixin):
     __tablename__ = "recipes"
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100), nullable=False)
-    # cooking_time = db.Column(db.Integer)
     meal_type_id = db.Column(db.Integer, ForeignKey("meal_types.id"))
     cooking_time = db.Column(Time)
     author_id = db.Column(db.Integer, ForeignKey("users.id"))
@@ -95,6 +90,12 @@ class Recipe(db.Model, SerializerMixin):
     author = db.relationship("User", back_populates="authored_recipes")
     favorited_by = db.relationship('User', secondary='user_favorites', back_populates='favorite_recipes')
     calendar_entries = db.relationship("CalendarRecipe", back_populates="recipe")
+    # calendars = db.relationship("CalendarRecipe", secondary="calendar_recipes", back_populates="recipes")
+    calendars = db.relationship(
+        "Calendar",
+        secondary="calendar_recipes",
+        backref=db.backref("recipes", lazy='dynamic'),
+    )
 
     # Serialization rules
     serialize_rules = ("-users.recipes", "-ingredients.recipes", "-meal_type.recipes")
@@ -123,7 +124,9 @@ class Recipe(db.Model, SerializerMixin):
         if not MealType.query.get(meal_type_id):
             raise ValueError("Meal type must exist.")
         return meal_type_id
-
+    
+    def __repr__(self):
+        return f"<Recipe {self.title} by User ID {self.author_id}>"
 
 class Ingredient(db.Model, SerializerMixin):
     __tablename__ = "ingredients"
@@ -174,7 +177,9 @@ class Ingredient(db.Model, SerializerMixin):
             raise ValueError("Invalid measurement format.")
 
         return measurement
-
+    
+    def __repr__(self):
+        return f"<Ingredient {self.name}>"
 
 class MealType(db.Model, SerializerMixin):
     __tablename__ = "meal_types"
@@ -194,20 +199,21 @@ class MealType(db.Model, SerializerMixin):
         if not type.strip():
             raise ValueError("Meal Type must not be blank")
         return type
-
+    
+    def __repr__(self):
+        return f"<MealType {self.type}>"
 
 class CalendarRecipe(db.Model, SerializerMixin):
     __tablename__ = "calendar_recipes"
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, ForeignKey("users.id"))
-    # calendar_id = db.Column(db.Integer, ForeignKey("calendars.id"))
     recipe_id = db.Column(db.Integer, ForeignKey("recipes.id"))
     date = db.Column(db.DateTime, default=datetime.utcnow)
-    
-    # calendar = db.relationship('Calendar', back_populates='recipes')
+    calendar_id = db.Column(db.Integer, ForeignKey("calendars.id"))
+        
     user = db.relationship('User', back_populates='calendar_entries')
     recipe = db.relationship('Recipe', back_populates='calendar_entries')
-
+    calendar = db.relationship('Calendar', back_populates='calendar_entries')
 
 class Calendar(db.Model, SerializerMixin):
     __tablename__ = "calendars"
@@ -217,9 +223,9 @@ class Calendar(db.Model, SerializerMixin):
 
     # Relationship
     user = db.relationship("User", back_populates="calendars")
-    recipes = db.relationship(
-        "Recipe", secondary="calendar_recipes", back_populates="calendars"
-    )
+    # recipes = db.relationship("Recipe", secondary="calendar_recipes", back_populates="calendars")
+    # recipes = db.relationship('CalendarRecipe', back_populates='calendar')
+    calendar_entries = db.relationship('CalendarRecipe', back_populates='calendar')
 
     # Serialization rules
     serialize_rules = ("-user.calendars", "-recipes.calendars")
@@ -237,7 +243,6 @@ class Calendar(db.Model, SerializerMixin):
             raise ValueError("User must exist.")
         return user_id
 
-
 # Association tables
 class UserRecipe(db.Model, SerializerMixin):
     __tablename__ = "user_recipes"
@@ -247,7 +252,6 @@ class UserRecipe(db.Model, SerializerMixin):
 
     # Serialization rules
     serialize_rules = ("-user", "-recipe")
-
 
 class RecipeIngredient(db.Model, SerializerMixin):
     __tablename__ = "recipe_ingredients"

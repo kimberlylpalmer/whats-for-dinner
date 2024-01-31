@@ -8,9 +8,17 @@
 from flask import Flask, request, make_response, session, jsonify
 from flask_restful import Resource, Api
 from datetime import datetime
+from os import environ
+from dotenv import load_dotenv
 
+
+# app = Flask(__name__)
 # Local imports
 from config import app, db, api
+
+#Secret Key
+load_dotenv(".env")
+app.secret_key = environ.get('SECRET_KEY')
 
 # Add your model imports
 from models import User, Recipe, Ingredient, MealType, Calendar, UserRecipe, RecipeIngredient, CalendarRecipe
@@ -24,11 +32,8 @@ def index():
     return '<h1>What\'s for Dinner Server</h1>'
 
 
-if __name__ == '__main__':
-    app.run(port=5555, debug=True)
-    
 
-# ~~~~~~~~~~~~~USER AUTHENTICATION~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# ~~~~~~~~~~~~~~~USER AUTHENTICATION~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 class Signup(Resource):
     def post(self):
@@ -47,8 +52,6 @@ class Signup(Resource):
             return make_response(new_user.to_dict(), 201)
         except ValueError as e:
             return make_response({"error" : f"{e}"}, 400)
-        
-api.add_resource(Signup, "/signup")
 
 class Login(Resource):
     def post(self):
@@ -71,14 +74,10 @@ class Login(Resource):
         session.clear()
         return {"error": "Incorrect username or password"}, 401
 
-api.add_resource(Login, "/login")
-
 class Logout(Resource):
     def delete(self):
         session.clear()
         return {}, 204
-
-api.add_resource(Logout, "/logout")
 
 class CheckSession(Resource):
     def get(self):
@@ -88,10 +87,7 @@ class CheckSession(Resource):
         else:
             return {}, 401
 
-api.add_resource(CheckSession, "/check_session")
-
-
-# ~~~~~~~~~~~~~USER ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# ~~~~~~~~~~~~~~~~~~USER ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 class Users(Resource):
     def get(self):
@@ -100,26 +96,19 @@ class Users(Resource):
         except Exception as e:
             return make_response({"error": "Could not get data"}, 400)
 
-api.add_resource(Users, "/user")
-
 class UserById(Resource):
     def get(self, id):
         user = User.query.get(id)
         if user:
             return make_response(user.to_dict(), 200)
         return make_response({"error": "User not found"}, 404)
-    
-api.add_resource(UserById, "/user/<int:id>")
-
+   
 #~~~~~~~~~~~~~~~~~~~RECIPES~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 class Recipes(Resource):
     def get(self):
         return make_response([recipe.to_dict() for recipe in Recipe.query.all()], 200)
-
-        
-api.add_resource(Recipes, "/recipes")
-
+   
 class RecipeById(Resource):
     
     def patch(self, recipe_id):
@@ -136,8 +125,6 @@ class RecipeById(Resource):
             return {"error": "Recipe not found or user not authroized to modify this recipe"}, 403
         return {"error": "User not authenticated"}, 401
 
-api.add_resource(RecipeById, "/recipes/<int:id>")
-
 class FavoriteRecipes(Resource):
     def get(self):
         user_id = session.get("user_id")
@@ -145,10 +132,7 @@ class FavoriteRecipes(Resource):
             user = User.query.get(user_id)
             return make_response([recipe.to_dict() for recip in user.favorite_recipes], 200)
         return {"error": "User not authenticated"}, 401
-    
-api.add_resource(FavoriteRecipes, "/favorites")
-
-
+   
 #~~~~~~~~~~~~~~~~~~~INGREDIENTS~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 class RecipesByIngredient(Resource):
     def get(self, ingredient_name):
@@ -157,10 +141,6 @@ class RecipesByIngredient(Resource):
             return make_response([recipe.to_dict() for recipe in ingredient.recipes], 200)
         return {"error": "Ingredient not found"}, 404
 
-api.add_resource(RecipesByIngredient, "/recipes/ingredient/<string:ingredient_name>")
-
-
-
 #~~~~~~~~~~~~~~~~~~~~~MEAL TYPE~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 class RecipesByMealType(Resource):
     def get(self, meal_type):
@@ -168,10 +148,6 @@ class RecipesByMealType(Resource):
         if meal_type_obj:
             return make_response([recipe.to_dict() for recipe in meal_type_obj.recipes], 200)
         return {"error": "Meal type not found."}, 404
-
-api.add_resource(RecipesByMealType, "/recipes/mealtype/<string:meal_type>")
-
-
 
 #~~~~~~~~~~~~~~~~~~~~~~~CALENDAR~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 class Calendar(Resource):
@@ -191,13 +167,49 @@ class Calendar(Resource):
             db.session.commit()
             return {"message": "Recipe removed from calendar"}, 200
         return {"error": "User not authenticated"}, 401
-
-api.add_resource(Calendar, "/calendar/<int:recipe_id>")
-
-
-
+    
+@app.route('/recipes', methods=['POST'])
+def add_recipe():
+    try:
+        data = request.get_json()
+        new_recipe = Recipe(
+            title=data['title'],
+            meal_type_id=data['meal_type_id'],
+            cooking_time=data['cooking_time'],
+            author_id=data['author_id']
+        )
         
+        #Handling ingredients
+        for ingredient_data in data['ingredients']:
+            ingredient = Ingredient.query.filter_by(name=ingredient_data['name']).first()
+            if not ingredient:
+                ingredient = Ingredient(name=ingredient_data['name'], measurement=ingredient_data.get('measurement', ''))            
+                db.session.add(ingredient)
+                db.session.flush()
+                
+            new_recipe.ingredients.append(ingredient)
+            
+        db.session.add(new_recipe)
+        db.session.commit()
+        return jsonify(new_recipe.to_dict()), 201
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
 
 
-        
+
+api.add_resource(Signup, "/signup")
+api.add_resource(Login, "/login")
+api.add_resource(Logout, "/logout")
+api.add_resource(CheckSession, "/check_session")
+api.add_resource(Users, "/user")
+api.add_resource(UserById, "/user/<int:id>")
+api.add_resource(Recipes, "/recipes")
+api.add_resource(RecipeById, "/recipes/<int:id>")
+api.add_resource(FavoriteRecipes, "/favorites")
+api.add_resource(RecipesByIngredient, "/recipes/ingredient/<string:ingredient_name>")
+api.add_resource(RecipesByMealType, "/recipes/mealtype/<string:meal_type>")
+api.add_resource(Calendar, "/calendar/<int:recipe_id>")      
+
+if __name__=="__main__":
+    app.run(port=5555, debug=True)  
 
