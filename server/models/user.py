@@ -23,8 +23,8 @@ class User(db.Model):
     recipes = db.relationship("Recipe", secondary="user_recipes", back_populates="users", cascade="all")
     authored_recipes = db.relationship("Recipe", back_populates="author")
     favorite_recipes = db.relationship("Recipe", secondary='user_favorites', back_populates='favorited_by')
-    calendar_entries = db.relationship("CalendarRecipe", back_populates="user")
-    calendars = db.relationship('Calendar', back_populates='user')
+    # calendar_entries = db.relationship("CalendarRecipe", back_populates="user")
+    # calendars = db.relationship('Calendar', back_populates='user')
     recipes = db.relationship('UserRecipe', back_populates='user')
 
     @validates("first_name")

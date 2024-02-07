@@ -5,7 +5,7 @@
 # Remote library imports
 import os
 from flask import Flask
-from flask_cors import CORS
+# from flask_cors import CORS
 from flask_migrate import Migrate
 from flask_restful import Api
 from flask_sqlalchemy import SQLAlchemy
@@ -39,7 +39,7 @@ migrate = Migrate(app, db)
 api = Api(app)
 
 # Instantiate CORS
-CORS(app)
+# CORS(app)
 
 
 bcrypt = Bcrypt(app)

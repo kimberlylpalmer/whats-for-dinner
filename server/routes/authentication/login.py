@@ -22,15 +22,13 @@ class Login(Resource):
             
             if username and password:
                 user = User.query.filter_by(username=username).first()
-                if user and user.check_password(password):  # Assuming check_password is correctly implemented
+                if user and user.check_password(password):  
                     session["user_id"] = user.id
-                    # Assuming you have a method or way to serialize user data
                     user_data = { 
                         "id": user.id, 
                         "username": user.username,
                         "first_name": user.first_name, 
-                        # include other user fields as needed, but do not include password
-                    }
+                }
                     return user_data, 200
                 return {"error": "Incorrect username or password"}, 401
             return {"error": "Username and password are required"}, 400

@@ -2,7 +2,7 @@
 
 from flask import request, session, make_response, jsonify
 from flask_restful import Resource
-from marshmallow import ValidationError
+from marshmallow import ValidationError, EXCLUDE
 from config import db
 from models import Recipe
 from schemas import RecipeSchema
@@ -18,24 +18,26 @@ class RecipeById(Resource):
             return make_response(self.recipe_schema.dump(recipe), 200)
         return make_response({"error": "Recipe not found"}, 404)
     
-    def patch(self, recipe_id):
-        user_id = session.get("user_id")
-        if user_id:
-            recipe = Recipe.query.get(recipe_id)
-            if recipe and recipe.author_id == user_id:
-                try:
-                    data = self.recipe_schema.load(request.get_json(), session=db.session, partial=True)
-                except ValidationError as e:
-                    return {"errors": e.messages}, 400
-                
-                for key, value in data.items():
-                    setattr(recipe, key, value)
-                    
-                db.session.commit()
-                
-                return self.recipe_schema.dump(recipe), 200
-            return {"error": "Recipe not found or user not authroized to modify this recipe"}, 403
-        return {"error": "User not authenticated"}, 401
+    def patch(self, id):
+        
+        recipe = Recipe.query.get_or_404(id, description=f"Could not find recipe {id}")
+        schema = RecipeSchema(partial=True)  # Allow partial updates
+        try:
+            updated_data = schema.load(request.json, instance=recipe, session=db.session)
+            # Print the loaded data to verify what's being deserialized
+            print("Loaded data for update:", updated_data)
+            
+            db.session.commit()
+            return schema.dump(updated_data), 200
+        
+        except ValidationError as err:
+            print("Validation error:", err.messages)
+            return {'errors': err.messages}, 400
+        
+        except Exception as e:
+            db.session.rollback()
+            print("Exception occurred:", str(e))
+            return {'error': str(e)}, 500
     
     def delete(self, id):
         try:
