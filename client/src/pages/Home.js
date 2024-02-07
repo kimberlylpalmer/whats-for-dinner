@@ -5,13 +5,13 @@ import "../styles.css"
 import NavBar from "../components/NavBar"
 
 function Home() {
-  useEffect(() => {
-    // Perform the fetch request to the test-cors endpoint
-    fetch('http://localhost:5555/test-cors')
-      .then(response => response.json())
-      .then(data => console.log(data))
-      .catch(error => console.error('Error fetching test CORS:', error));
-  }, []);
+  // useEffect(() => {
+  //   // Perform the fetch request to the test-cors endpoint
+  //   fetch('/api/test-cors')
+  //     .then(response => response.json())
+  //     .then(data => console.log(data))
+  //     .catch(error => console.error('Error fetching test CORS:', error));
+  // }, []);
 
 
     return (

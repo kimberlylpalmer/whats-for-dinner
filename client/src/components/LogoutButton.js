@@ -9,7 +9,7 @@ const LogoutButton = () => {
   const { logout } = useAuth();
 
   const handleLogout = async () => {
-    fetch("/logout", { method: "DELETE" })
+    fetch("/api/logout", { method: "DELETE" })
       .then(() => {
         logout();
         navigate('/');
