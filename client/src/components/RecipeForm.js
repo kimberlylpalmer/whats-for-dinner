@@ -10,7 +10,7 @@ const RecipeForm = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch("http://localhost:5555/meal_type")
+    fetch("/api/meal_type")
       .then((r) => {
         if (!r.ok) {
           throw new Error("HTTP error! status: ${response.status}");
@@ -53,7 +53,7 @@ const RecipeForm = () => {
         "Content-Type": "application/json",
       });
 
-      fetch("http://localhost:5555/recipes", {
+      fetch("/api/recipes", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

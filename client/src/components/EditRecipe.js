@@ -2,12 +2,15 @@ import React, { useState, useEffect } from "react";
 import { useFormik } from "formik";
 import { useAuth } from "./AuthContext";
 
+
+
+
 const EditRecipeForm = ({recipe, onCancel, onUpdate}) => {
     const { user } = useAuth();
     const [mealTypes, setMealTypes] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:5555/meal_type")
+    fetch("/api/meal_type")
       .then((r) => {
         if (!r.ok) {
           throw new Error(`HTTP error! status: ${r.status}`);
@@ -48,7 +51,7 @@ const EditRecipeForm = ({recipe, onCancel, onUpdate}) => {
       };
       console.log("Editing recipe:", recipeData);
 
-      fetch(`http://localhost:5555/recipes/${recipe.id}`, {
+      fetch(`/api/recipes/${recipe.id}`, {
           method: "PATCH",
           // credentials: 'include',
         headers: {
