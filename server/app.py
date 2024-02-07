@@ -5,6 +5,7 @@ from os import environ
 
 # Local imports
 from config import app, db, api
+from flask import render_template
 # from flask import Flask
 from flask_cors import CORS
 from routes.authentication.checksession import CheckSession
@@ -76,22 +77,28 @@ def test_cors():
 
 @app.route('/')
 def index():
-    return '<h1>What\'s for Dinner Server</h1>'
+    return render_template("index.html")
 
-api.add_resource(Signup, "/signup")
-api.add_resource(Login, "/login")
-api.add_resource(Logout, "/logout")
-api.add_resource(CheckSession, "/check_session")
-api.add_resource(Users, "/users")
-api.add_resource(UserById, "/user/<int:id>", endpoint='userbyid')
-api.add_resource(Recipes, "/recipes")
-api.add_resource(RecipeById, "/recipes/<int:id>", endpoint='recipebyid')
-api.add_resource(FavoriteRecipes, "/favorites")
+@app.errorhandler(404)
+def not_found(e):
+    return render_template("index.html")
+
+# '<h1>What\'s for Dinner Server</h1>'
+
+api.add_resource(Signup, "/api/signup")
+api.add_resource(Login, "/api/login")
+api.add_resource(Logout, "/api/logout")
+api.add_resource(CheckSession, "/api/check_session")
+api.add_resource(Users, "/api/users")
+api.add_resource(UserById, "/api/user/<int:id>", endpoint='userbyid')
+api.add_resource(Recipes, "/api/recipes")
+api.add_resource(RecipeById, "/api/recipes/<int:id>", endpoint='recipebyid')
+api.add_resource(FavoriteRecipes, "/api/favorites")
 # api.add_resource(RecipesByIngredient, "/recipes/ingredient/<string:ingredient_name>", endpoint='recipesbyingredient')
-api.add_resource(RecipesByMealType, "/recipes/mealtype/<string:meal_type>", endpoint='recipesbymealtype')
+api.add_resource(RecipesByMealType, "/api/recipes/mealtype/<string:meal_type>", endpoint='recipesbymealtype')
 # api.add_resource(Calendar, "/calendar/<int:recipe_id>")      
 # api.add_resource(CalendarById, "/calendar/<int:id>", endpoint="calendar_by_id")
-api.add_resource(MealTypeResource, '/meal_type')
+api.add_resource(MealTypeResource, '/api/meal_type')
 
 
 if __name__=="__main__":
