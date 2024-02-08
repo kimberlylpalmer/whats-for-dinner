@@ -16,7 +16,7 @@ class RecipeSchema(SQLAlchemyAutoSchema):
         model = Recipe
         sqla_session = db.session
         load_instance = True
-        fields = ("id", "title", "meal_type_id", "cooking_time", "author_id", "directions", "ingredients", "image_url" )
+        fields = ("id", "title", "meal_type_id", "cooking_time", "author_id", "directions", "ingredients", "image_url", "meal_type_name", "author_username" )
         
 
     id = auto_field()
@@ -29,6 +29,8 @@ class RecipeSchema(SQLAlchemyAutoSchema):
     directions = fields.String(required=True, validate=validate.Length(min=5, error="Directions must be at least 5 characters"))
     ingredients = fields.String(required=True)
     image_url = fields.String(required=False)
+    meal_type_name = fields.Method("get_meal_type_name")
+    author_username = fields.Method("get_author_username")
     
     def get_meal_type_name(self, obj):
         return obj.meal_type.type if obj.meal_type else None
@@ -47,6 +49,17 @@ class RecipeSchema(SQLAlchemyAutoSchema):
         if 'ingredients' in data:
             data['ingredients'] = json.loads(data['ingredients'])
         return data
+    
+    @post_dump(pass_many=True)
+    def default_fields(self, data, many, **kwargs):
+        if many:
+            for item in data:
+                item['meal_type_name']=item.get('meal_type_name', 'Default Meal Type')
+                item['author_username'] = item.get('author_username', 'Anonymous')
+            else:
+                data['meal_type_name'] = data.get('meal_type_name', 'Default Meal Type')
+                data['author_username'] = data.get('author_username', 'Anonymous')
+            return data
     
     
     url = ma.Hyperlinks({
