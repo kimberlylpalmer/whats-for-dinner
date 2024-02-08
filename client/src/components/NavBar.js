@@ -1,5 +1,5 @@
 import React from 'react';
-import { NavLink, Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { useAuth } from './AuthContext';
 import "../styles.css";
 import LogoutButton from './LogoutButton';
