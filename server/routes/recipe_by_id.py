@@ -21,10 +21,9 @@ class RecipeById(Resource):
     def patch(self, id):
         
         recipe = Recipe.query.get_or_404(id, description=f"Could not find recipe {id}")
-        schema = RecipeSchema(partial=True)  # Allow partial updates
+        schema = RecipeSchema(partial=True)
         try:
             updated_data = schema.load(request.json, instance=recipe, session=db.session)
-            # Print the loaded data to verify what's being deserialized
             print("Loaded data for update:", updated_data)
             
             db.session.commit()
@@ -49,6 +48,6 @@ class RecipeById(Resource):
             else:
                 return make_response(jsonify({'error': 'Recipe not found'}), 404)
         except Exception as e:
-        # Log the exception e
+ 
             return make_response(jsonify({'error': 'Failed to delete recipe', 'details': str(e)}), 500)
     
