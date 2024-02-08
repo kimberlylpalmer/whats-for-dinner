@@ -7,8 +7,8 @@ import { useNavigate } from "react-router-dom";
 function RecipeCard({ recipe, onRecipeUpdate, onRecipeDelete }) {
   const { user } = useAuth();
   const isAuthor = user && recipe.author_id === user.id;
-    const [isEditing, setIsEditing] = useState(false);
-    const navigate = useNavigate();
+  const [isEditing, setIsEditing] = useState(false);
+  const navigate = useNavigate();
 
   const toggleEdit = () => {
     setIsEditing(!isEditing);
@@ -19,7 +19,6 @@ function RecipeCard({ recipe, onRecipeUpdate, onRecipeDelete }) {
     setIsEditing(false);
   };
 
-    
   const handleRecipeDelete = () => {
     console.log("attempting to delete Recipe ID:", recipe.id);
     fetch(`/api/recipes/${recipe.id}`, {
@@ -30,20 +29,20 @@ function RecipeCard({ recipe, onRecipeUpdate, onRecipeDelete }) {
     })
       .then((response) => {
         if (!response.ok) {
-          throw new Error(`Failed to delete recipe with status: ${response.status}`);
+          throw new Error(
+            `Failed to delete recipe with status: ${response.status}`
+          );
         }
-        return response.json(); 
+        return response.json();
       })
       .then(() => {
-
         onRecipeDelete(recipe.id);
-    })
+      })
 
       .catch((error) => {
         console.error("Error deleting recipe:", error);
       });
   };
-    
 
   return (
     <div className="card">
@@ -76,7 +75,12 @@ function RecipeCard({ recipe, onRecipeUpdate, onRecipeDelete }) {
               ))}
             </ul>
           </div>
-          <p>{recipe.directions}</p>
+          <div className="recipe-directions">
+            <h3>Directions:</h3>
+            {recipe.directions.split("\n").map((line, index) => (
+              <p key={index}>{line}</p>
+            ))}
+          </div>
           {isAuthor && (
             <>
               <button className="button" onClick={handleRecipeDelete}>

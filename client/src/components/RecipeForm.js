@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useFormik } from "formik";
 import { useAuth } from "./AuthContext";
-import NavBar from "../components/NavBar"
-import { useNavigate } from 'react-router-dom'
+import NavBar from "../components/NavBar";
+import { useNavigate } from "react-router-dom";
 
 const RecipeForm = () => {
   const { user } = useAuth();
@@ -38,7 +38,9 @@ const RecipeForm = () => {
 
     onSubmit: (values) => {
       const { cookingHours, cookingMinutes, ...rest } = values;
-      const cookingTime = `${cookingHours ? `${cookingHours} hour(s)` : ''} ${cookingMinutes ? `${cookingMinutes} minute(s)` : ''}`.trim();
+      const cookingTime = `${cookingHours ? `${cookingHours} hour(s)` : ""} ${
+        cookingMinutes ? `${cookingMinutes} minute(s)` : ""
+      }`.trim();
       console.log(values);
       if (!user) {
         alert("Please log in to submit a recipe.");
@@ -64,8 +66,9 @@ const RecipeForm = () => {
         body: JSON.stringify(recipeData),
       })
         .then((r) => r.json())
-        .then((data) => {console.log("Recipe submitted:", data);
-        navigate('/recipes');
+        .then((data) => {
+          console.log("Recipe submitted:", data);
+          navigate("/recipes");
         })
         .catch((error) => console.error("Error:", error));
     },
@@ -89,25 +92,23 @@ const RecipeForm = () => {
     );
     formik.setFieldValue("ingredients", newIngredients);
   };
-  
-  const handleNavigateToUser = () => {
-    navigate('/user');
-}
-  const handleNavigateToRecipes = () => {
-    navigate('/recipes');
-}
 
+  const handleNavigateToUser = () => {
+    navigate("/user");
+  };
+  const handleNavigateToRecipes = () => {
+    navigate("/recipes");
+  };
 
   return (
-    
     <form onSubmit={formik.handleSubmit}>
       <header>
-          <NavBar />
+        <NavBar />
       </header>
       <div>
-                <button onClick={handleNavigateToUser}>Back to User Page</button>
-                <button onClick={handleNavigateToRecipes}>Back to Recipes Page</button>
-            </div>
+        <button onClick={handleNavigateToUser}>Back to User Page</button>
+        <button onClick={handleNavigateToRecipes}>Back to Recipes Page</button>
+      </div>
       <div>
         <h1>New Recipe</h1>
       </div>
@@ -176,14 +177,20 @@ const RecipeForm = () => {
       <br></br>
 
       <label htmlFor="directions">Directions</label>
-      <br></br>
-      <textarea
-        id="directions"
-        name="directions"
-        onChange={formik.handleChange}
-        value={formik.values.directions}
-        className="form-input"
-      />
+        <p>Please enter each step on a new line. Example:</p>
+        <div className="directions-example">
+          Step 1: Mix the ingredients.<br />
+          Step 2: Bake for 50 minutes.<br />
+          Step 3: Let it cool.
+        </div>
+        <textarea
+          id="directions"
+          name="directions"
+          onChange={formik.handleChange}
+          value={formik.values.directions}
+          className="form-input"
+          rows="10"
+        />
       <div>
         <label htmlFor="directions">Ingredients</label>
         {formik.values.ingredients.map((ingredient, index) => (
