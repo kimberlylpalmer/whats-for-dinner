@@ -7,6 +7,7 @@ import "../styles.css";
 function Recipes() {
   const [recipes, setRecipes] = useState([]);
   const navigate = useNavigate();
+  const [showFavorites, setShowFavorites] = useState(false);
 
   const handleNavigateToUser = () => {
     navigate("/user");
@@ -27,14 +28,15 @@ function Recipes() {
   };
 
   useEffect(() => {
-    fetch("api/recipes")
+    const endpoint = showFavorites ? 'api/favorites' : 'api/recipes';
+    fetch(endpoint)
       .then((response) => response.json())
       .then((data) => {
         setRecipes(data);
         console.log(data); // Log to see the fetched data
       })
       .catch((error) => console.error("Error fetching recipes:", error));
-  }, []);
+  }, [showFavorites]);
 
   const handleRecipeDelete = (recipeId) => {
     setRecipes((prevRecipes) =>
@@ -48,8 +50,11 @@ function Recipes() {
       </header>
       <h1> Recipes </h1>
       <div>
-        <button onClick={handleNavigateToUser}>Back to User Page</button>
-        <button onClick={handleNavigateToRecipeForm}>Add New Recipe</button>
+        <button className='button' onClick={handleNavigateToUser}>Back to User Page</button>
+        <button className='button' onClick={handleNavigateToRecipeForm}>Add New Recipe</button>
+        <button className='button' onClick={() => setShowFavorites(!showFavorites)}>
+          {showFavorites ? 'Show All Recipes' : 'Show Favorites'}
+        </button>
       </div>
       <div id="recipe-container">
         {recipes.map((recipe) => (
