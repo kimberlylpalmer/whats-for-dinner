@@ -8,6 +8,16 @@ import { useAuth } from "./AuthContext";
 const EditRecipeForm = ({recipe, onCancel, onUpdate}) => {
     const { user } = useAuth();
     const [mealTypes, setMealTypes] = useState([]);
+  
+  const parseCookingTime = (cookingTime) => {
+    const hoursMatch = cookingTime.match(/(\d+)\s*hour/);
+    const minutesMatch = cookingTime.match(/(\d+)\s*minute/);
+    return {
+      cookingHours: hoursMatch ? hoursMatch[1] : '',
+      cookingMinutes: minutesMatch ? minutesMatch[1] : '',
+    };
+  };
+  const { cookingHours, cookingMinutes } = parseCookingTime(recipe.cooking_time);
 
   useEffect(() => {
     fetch("/api/meal_type")
@@ -28,7 +38,9 @@ const EditRecipeForm = ({recipe, onCancel, onUpdate}) => {
     initialValues: {
       title: recipe.title,
       meal_type_id: recipe.meal_type_id,
-      cooking_time: recipe.cooking_time,
+      cookingHours, 
+      cookingMinutes,
+      // cooking_time: recipe.cooking_time,
       author_id: recipe.author_id,
       directions: recipe.directions,
       image_url: recipe.image_url,
@@ -39,6 +51,7 @@ const EditRecipeForm = ({recipe, onCancel, onUpdate}) => {
     },
 
     onSubmit: (values) => {
+      const cookingTime = `${values.cookingHours ? `${values.cookingHours} hour(s) ` : ''}${values.cookingMinutes ? `${values.cookingMinutes} minute(s)` : ''}`.trim();
       console.log("Updated values:", values);
       if (!user) {
         alert("Please log in to submit a recipe.");
@@ -47,13 +60,19 @@ const EditRecipeForm = ({recipe, onCancel, onUpdate}) => {
       }        
       const recipeData = {
         ...values,
+        cooking_time: cookingTime,
         author_id: user.id,
       };
+
+      delete recipeData.cookingHours;
+      delete recipeData.cookingMinutes;
+      
       console.log("Editing recipe:", recipeData);
+
+      
 
       fetch(`/api/recipes/${recipe.id}`, {
           method: "PATCH",
-          // credentials: 'include',
         headers: {
             "Content-Type": "application/json",
           },
@@ -62,7 +81,7 @@ const EditRecipeForm = ({recipe, onCancel, onUpdate}) => {
           .then((response) => {
               console.log("Raw fetch response:", response);
               if (!response.ok) {
-                  console.error("Fetch response was not OK:", response.statusText);
+                console.error("Fetch response was not OK:", response.statusText);
               }
               return response.json();
           })
@@ -129,17 +148,22 @@ const EditRecipeForm = ({recipe, onCancel, onUpdate}) => {
       </select>
       <br></br>
       <p>space between here please</p>
-      <label htmlFor="cooking_time" className="form-label">
-        Cooking Time
-      </label>
-      <br></br>
+      <label htmlFor="cookingHours">Cooking Hours:</label>
       <input
-        id="cooking_time"
-        name="cooking_time"
-        type="time"
+        id="cookingHours"
+        name="cookingHours"
+        type="number"
         onChange={formik.handleChange}
-        value={formik.values.cooking_time}
-        className="form-input"
+        value={formik.values.cookingHours}
+      />
+      
+      <label htmlFor="cookingMinutes">Cooking Minutes:</label>
+      <input
+        id="cookingMinutes"
+        name="cookingMinutes"
+        type="number"
+        onChange={formik.handleChange}
+        value={formik.values.cookingMinutes}
       />
       <br></br>
       <label htmlFor="image_url" className="form-label">
