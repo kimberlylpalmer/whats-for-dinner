@@ -3,8 +3,10 @@
 import React from "react";
 import "../styles.css"
 import NavBar from "../components/NavBar"
+import { useNavigate } from "react-router-dom";
 
 function Home() {
+  const navigate = useNavigate();
   // useEffect(() => {
   //   // Perform the fetch request to the test-cors endpoint
   //   fetch('/api/test-cors')
@@ -31,6 +33,9 @@ function Home() {
           </main>
           <div className="rightColumn homeColumn">
             <p>Feast Your Eyes, Fuel Your Soul.</p>
+          </div>
+          <div>
+            <button className="button" onClick={() => navigate('/recipes')}>View Recipes</button> 
           </div>
         </div>
       </>

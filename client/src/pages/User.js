@@ -17,7 +17,6 @@ function User() {
       <main className="homeBackground">
         <h1>Welcome {userData?.first_name}</h1>
         <p>User ID: {userData?.id}</p>
-        <button className="button" onClick={() => navigate('/recipes')}>View Recipes</button> {/* Add this button */}
       </main>
       <div className="homeGridContainer">
         <div className="leftColumn homeColumn">
@@ -38,6 +37,10 @@ function User() {
           </p>
           <button>does nothing(user page)</button>
         </div>
+          <button className="button" onClick={() => navigate('/recipes')}>View Recipes</button> 
+          <button className="button" onClick={() => navigate('/recipes')}>Meal Planning</button> 
+          <button className="button" onClick={() => navigate('/recipes')}>Edit User</button> 
+          <button className="button" onClick={() => navigate('/recipes')}>Delete Account</button> 
       </div>
     </>
   );
