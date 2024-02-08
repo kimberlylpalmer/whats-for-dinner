@@ -24,28 +24,13 @@ from routes.recipes_by_meal_type import RecipesByMealType
 from enum import Enum
 from models.meal_type import MealType
 from flask_restful import Api
+from models.enums import MealTypeEnum
 
 CORS(app)
 # CORS(app, supports_credentials=True, origins=['http://localhost:3000'])
 # CORS(app, resources={r"/api/*": {"origins": "http://localhost:3000"}}, supports_credentials=True)
 
 api = Api(app)
-
-class MealTypeEnum(Enum):
-    BEEF = "Beef"
-    POULTRY = "Poultry"
-    SEAFOOD = "Seafood"
-    PORK = "Pork"
-    LAMB = "Lamb"
-    APPETIZERS = "Appetizers"
-    SIDES = "Side Dishes"
-    SOUPS = "Soups"
-    PASTA_GRAINS = "Pasta, Grains, & Rice"
-    POTATOES = "Potatoes, Beans, & Legumes"
-    SALADS_VEGETABLES = "Salads & Vegetables"
-    BREADS = "Breads"
-    SWEETS = "Desserts"
-    DRINKS = "Drinks"
     
 def load_meal_types():
     existing_types = MealType.query.with_entities(MealType.type).all()  
