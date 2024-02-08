@@ -2,11 +2,13 @@ import React, { useState } from "react";
 import defaultImage from "../assets/pexels-karolina-grabowska-4033639.jpg";
 import { useAuth } from "../components/AuthContext";
 import EditRecipeForm from "./EditRecipe";
+import { useNavigate } from "react-router-dom";
 
-function RecipeCard({ recipe, onRecipeUpdate }) {
+function RecipeCard({ recipe, onRecipeUpdate, onRecipeDelete }) {
   const { user } = useAuth();
   const isAuthor = user && recipe.author_id === user.id;
-  const [isEditing, setIsEditing] = useState(false);
+    const [isEditing, setIsEditing] = useState(false);
+    const navigate = useNavigate();
 
   const toggleEdit = () => {
     setIsEditing(!isEditing);
@@ -17,6 +19,7 @@ function RecipeCard({ recipe, onRecipeUpdate }) {
     setIsEditing(false);
   };
 
+    
   const handleRecipeDelete = () => {
     console.log("attempting to delete Recipe ID:", recipe.id);
     fetch(`/api/recipes/${recipe.id}`, {
@@ -26,20 +29,49 @@ function RecipeCard({ recipe, onRecipeUpdate }) {
       },
     })
       .then((response) => {
-        console.log("Fetch response:", response); // Log the response object to see its status and other properties
-        if (response.ok) {
-          console.log(`Recipe ID ${recipe.id} deleted successfully.`);
-          onRecipeUpdate(); // Assuming this updates the list by re-fetching or removing the item from state.
-        } else {
-          console.error("Failed to delete recipe with response:", response);
+        if (!response.ok) {
+          throw new Error(`Failed to delete recipe with status: ${response.status}`);
         }
-        return response.json(); // Parse JSON body of the response (if any)
+        return response.json(); // Assuming the server sends back a JSON response
       })
-      .then((data) => {
-        console.log("Response data:", data); // Log the response data to see the actual payload
-      })
-      .catch((error) => console.error("Error deleting recipe:", error));
+      .then(() => {
+        // Call the onRecipeDelete function passed from the parent component
+        onRecipeDelete(recipe.id);
+    })
+    //   .then((data) => {
+    //       console.log("Recipe deleted successfully:", data);
+    //       console.log("Redirecting to recipes page");
+    //     navigate("/recipes"); // Redirect to recipes page
+    //   })
+      .catch((error) => {
+        console.error("Error deleting recipe:", error);
+      });
   };
+    
+//   const handleRecipeDelete = () => {
+//     console.log("attempting to delete Recipe ID:", recipe.id);
+//     fetch(`/api/recipes/${recipe.id}`, {
+//       method: "DELETE",
+//       headers: {
+//         "Content-Type": "application/json",
+//       },
+//     })
+//       .then((response) => {
+//         console.log("Fetch response:", response); // Log the response object to see its status and other properties
+//         if (response.ok) {
+//           console.log(`Recipe ID ${recipe.id} deleted successfully.`);
+          
+//           onRecipeUpdate(); 
+//         } else {
+//           console.error("Failed to delete recipe with response:", response);
+//         }
+//         return response.json(); // Parse JSON body of the response (if any)
+//       })
+//       .then((data) => {
+//         console.log("Response data:", data);
+//       })
+//       .catch((error) => console.error("Error deleting recipe:", error));
+//   };
 
   return (
     <div className="card">

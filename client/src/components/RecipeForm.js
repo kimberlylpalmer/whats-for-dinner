@@ -61,7 +61,9 @@ const RecipeForm = () => {
         body: JSON.stringify(recipeData),
       })
         .then((response) => response.json())
-        .then((data) => console.log("Recipe submitted:", data))
+        .then((data) => {console.log("Recipe submitted:", data);
+        navigate('/recipes');
+        })
         .catch((error) => console.error("Error:", error));
     },
   });
