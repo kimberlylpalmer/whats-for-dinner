@@ -1,6 +1,6 @@
 // Home.js
 
-import React, {useEffect} from "react";
+import React from "react";
 import "../styles.css"
 import NavBar from "../components/NavBar"
 

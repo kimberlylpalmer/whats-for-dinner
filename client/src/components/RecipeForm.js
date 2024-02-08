@@ -13,7 +13,7 @@ const RecipeForm = () => {
     fetch("/api/meal_type")
       .then((r) => {
         if (!r.ok) {
-          throw new Error("HTTP error! status: ${response.status}");
+          throw new Error(`HTTP error! status: ${response.status}`);
         }
         return r.json();
       })

@@ -5,7 +5,6 @@ import {
   BrowserRouter as Router,
   Route,
   Routes,
-  Navigate,
 } from "react-router-dom";
 import { AuthProvider } from "../components/AuthContext";
 import PrivateRoute from '../components/PrivateRoute';
@@ -16,7 +15,7 @@ import Home from "./Home";
 import User from "./User";
 import Signup from "./Signup";
 import Recipes from "./Recipes"
-import NavBar from "../components/NavBar";
+// import NavBar from "../components/NavBar";
 
 
 const App = () => {
