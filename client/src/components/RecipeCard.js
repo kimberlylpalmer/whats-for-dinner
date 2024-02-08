@@ -16,30 +16,30 @@ function RecipeCard({ recipe, onRecipeUpdate }) {
     onRecipeUpdate(updatedRecipe);
     setIsEditing(false);
   };
-    
-    const handleRecipeDelete = () => {
-        console.log("attempting to delete Recipe ID:", recipe.id);
-        fetch(`api/recipes/${recipe.id}`, {
-            method: "DELETE",
-            headers: {
-                "Content-Type": "application/json",
-            },
-        })
-        .then(response => {
-            console.log("Fetch response:", response); // Log the response object to see its status and other properties
-            if (response.ok) {
-                console.log(`Recipe ID ${recipe.id} deleted successfully.`);
-                onRecipeUpdate(); // Assuming this updates the list by re-fetching or removing the item from state.
-            } else {
-                console.error("Failed to delete recipe with response:", response);
-            }
-            return response.json(); // Parse JSON body of the response (if any)
-        })
-        .then(data => {
-            console.log("Response data:", data); // Log the response data to see the actual payload
-        })
-        .catch(error => console.error("Error deleting recipe:", error));
-    };
+
+  const handleRecipeDelete = () => {
+    console.log("attempting to delete Recipe ID:", recipe.id);
+    fetch(`/api/recipes/${recipe.id}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => {
+        console.log("Fetch response:", response); // Log the response object to see its status and other properties
+        if (response.ok) {
+          console.log(`Recipe ID ${recipe.id} deleted successfully.`);
+          onRecipeUpdate(); // Assuming this updates the list by re-fetching or removing the item from state.
+        } else {
+          console.error("Failed to delete recipe with response:", response);
+        }
+        return response.json(); // Parse JSON body of the response (if any)
+      })
+      .then((data) => {
+        console.log("Response data:", data); // Log the response data to see the actual payload
+      })
+      .catch((error) => console.error("Error deleting recipe:", error));
+  };
 
   return (
     <div className="card">
