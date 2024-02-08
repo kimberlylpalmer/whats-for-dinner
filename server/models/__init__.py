@@ -9,3 +9,4 @@ from .recipe import Recipe
 from .user_favorite import UserFavorite
 from .user_recipe import UserRecipe
 from .user import User
+from .enums import MealTypeEnum
