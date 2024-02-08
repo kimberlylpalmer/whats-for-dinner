@@ -28,7 +28,7 @@ function Recipes() {
     }
 
     useEffect(() => {
-        fetch("/api/recipes")
+        fetch("api/recipes")
             .then(response => response.json())
             .then(data => {
                 setRecipes(data);
