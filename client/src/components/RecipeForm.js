@@ -28,7 +28,8 @@ const RecipeForm = () => {
     initialValues: {
       title: "",
       meal_type_id: "",
-      cooking_time: "",
+      cookingHours: "",
+      cookingMinutes: "",
       author_id: user ? user.id : null,
       directions: "",
       image_url: "",
@@ -36,14 +37,16 @@ const RecipeForm = () => {
     },
 
     onSubmit: (values) => {
+      const { cookingHours, cookingMinutes, ...rest } = values;
+      const cookingTime = `${cookingHours ? `${cookingHours} hour(s)` : ''} ${cookingMinutes ? `${cookingMinutes} minute(s)` : ''}`.trim();
       console.log(values);
       if (!user) {
         alert("Please log in to submit a recipe.");
-        // console.log("User not logged in");
         return;
       }
       const recipeData = {
-        ...values,
+        ...rest,
+        cooking_time: cookingTime,
         author_id: user.id,
       };
 
@@ -60,7 +63,7 @@ const RecipeForm = () => {
         },
         body: JSON.stringify(recipeData),
       })
-        .then((response) => response.json())
+        .then((r) => r.json())
         .then((data) => {console.log("Recipe submitted:", data);
         navigate('/recipes');
         })
@@ -140,17 +143,22 @@ const RecipeForm = () => {
       </select>
       <br></br>
       <p>space between here please</p>
-      <label htmlFor="title" className="form-label">
-        Cooking Time
-      </label>
-      <br></br>
+      <label htmlFor="cookingHours">Hours: </label>
       <input
-        id="cooking_time"
-        name="cooking_time"
-        type="time"
+        id="cookingHours"
+        name="cookingHours"
+        type="number"
         onChange={formik.handleChange}
-        value={formik.values.cooking_time}
-        className="form-input"
+        value={formik.values.cookingHours}
+      />
+
+      <label htmlFor="cookingMinutes">Minutes:</label>
+      <input
+        id="cookingMinutes"
+        name="cookingMinutes"
+        type="number"
+        onChange={formik.handleChange}
+        value={formik.values.cookingMinutes}
       />
       <br></br>
       <label htmlFor="image_url" className="form-label">

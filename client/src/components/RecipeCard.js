@@ -32,46 +32,18 @@ function RecipeCard({ recipe, onRecipeUpdate, onRecipeDelete }) {
         if (!response.ok) {
           throw new Error(`Failed to delete recipe with status: ${response.status}`);
         }
-        return response.json(); // Assuming the server sends back a JSON response
+        return response.json(); 
       })
       .then(() => {
-        // Call the onRecipeDelete function passed from the parent component
+
         onRecipeDelete(recipe.id);
     })
-    //   .then((data) => {
-    //       console.log("Recipe deleted successfully:", data);
-    //       console.log("Redirecting to recipes page");
-    //     navigate("/recipes"); // Redirect to recipes page
-    //   })
+
       .catch((error) => {
         console.error("Error deleting recipe:", error);
       });
   };
     
-//   const handleRecipeDelete = () => {
-//     console.log("attempting to delete Recipe ID:", recipe.id);
-//     fetch(`/api/recipes/${recipe.id}`, {
-//       method: "DELETE",
-//       headers: {
-//         "Content-Type": "application/json",
-//       },
-//     })
-//       .then((response) => {
-//         console.log("Fetch response:", response); // Log the response object to see its status and other properties
-//         if (response.ok) {
-//           console.log(`Recipe ID ${recipe.id} deleted successfully.`);
-          
-//           onRecipeUpdate(); 
-//         } else {
-//           console.error("Failed to delete recipe with response:", response);
-//         }
-//         return response.json(); // Parse JSON body of the response (if any)
-//       })
-//       .then((data) => {
-//         console.log("Response data:", data);
-//       })
-//       .catch((error) => console.error("Error deleting recipe:", error));
-//   };
 
   return (
     <div className="card">
