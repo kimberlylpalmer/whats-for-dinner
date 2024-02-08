@@ -1,8 +1,7 @@
 #meal_type_schema.py
 
 from marshmallow import Schema, fields, validates_schema, ValidationError
-from models.meal_type import MealType
-from models.enums import MealTypeEnum
+from models import MealTypeEnum
 
 
 class MealTypeSchema(Schema):
