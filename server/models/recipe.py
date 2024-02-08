@@ -14,7 +14,8 @@ class Recipe(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100), nullable=False)
     meal_type_id = db.Column(db.Integer, db.ForeignKey("meal_types.id"))
-    cooking_time = db.Column(db.Time)
+    # cooking_time = db.Column(db.Time)
+    cooking_time = db.Column(db.String, nullable=True)
     author_id = db.Column(db.Integer, db.ForeignKey("users.id"))
     directions = db.Column(db.Text)
     image_url = db.Column(db.String, nullable=True)
@@ -35,13 +36,13 @@ class Recipe(db.Model):
             raise ValueError("Title must be at least 3 characters.")
         return title
 
-    @validates("cooking_time")
-    def validate_cooking_time(self, key, value):
-        if not isinstance(value, time) and value is not None:
-            raise TypeError("Cooking time must be a valid time format or None.")
-        elif value == time(0, 0):
-            raise ValueError("Cooking time cannot be 00:00.")
-        return value
+    # @validates("cooking_time")
+    # def validate_cooking_time(self, key, value):
+    #     if not isinstance(value, time) and value is not None:
+    #         raise TypeError("Cooking time must be a valid time format or None.")
+    #     elif value == time(0, 0):
+    #         raise ValueError("Cooking time cannot be 00:00.")
+    #     return value
     
     
     def __repr__(self):
