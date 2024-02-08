@@ -19,7 +19,7 @@ function RecipeCard({ recipe, onRecipeUpdate }) {
     
     const handleRecipeDelete = () => {
         console.log("attempting to delete Recipe ID:", recipe.id);
-        fetch(`http://localhost:5555/api/recipes/${recipe.id}`, {
+        fetch(`api/recipes/${recipe.id}`, {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json",
