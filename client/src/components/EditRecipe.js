@@ -215,7 +215,7 @@ const EditRecipeForm = ({recipe, onCancel, onUpdate}) => {
         </button>
       </div>
       <button type="submit" className="button">
-        Edit Recipe
+        Update Recipe
           </button>
           <button className="button" type="button" onClick={onCancel}>Cancel</button>
 

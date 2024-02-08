@@ -2,13 +2,34 @@ import React, { useEffect, useState } from "react";
 import "../styles.css";
 import NavBar from "../components/NavBar";
 import { useNavigate } from "react-router-dom";
+import EditUserForm from "../components/EditUser";
 
 
 
 function User() {
-
-  // const userData = JSON.parse(localStorage.getItem('user'));
   const [userData, setUserData] = useState(() => JSON.parse(localStorage.getItem('user')));
+  const [isEditing, setIsEditing] = useState(false);
+
+  const handleUpdateUser = async (updatedUserData) => {
+    try {
+      const response = await fetch(`/api/user/${userData.id}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(updatedUserData),
+      });
+      if (!response.ok) {
+        throw new Error('Failed to update user');
+      }
+      const data = await response.json();
+      setUserData(data);
+      localStorage.setItem('user', JSON.stringify(data));
+      setIsEditing(false);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   console.log(userData)
   const navigate = useNavigate();
@@ -46,18 +67,23 @@ function User() {
   }, []);
 
   return (
-    <>
+    <div>
       <header>
         <NavBar />
       </header>
+      {isEditing ? (
+        <EditUserForm userData={userData} onUpdateUser={handleUpdateUser} />
+      ) : (
+        <>
       <main className="homeBackground">
         <h1>Welcome {userData?.first_name}</h1>
         {/* <p>User ID: {userData?.id}</p> */}
       </main>
+          <button className="button" onClick={() => navigate('/recipes')}>View Recipes</button> 
+          <button className="button" onClick={() => navigate('/recipes')}>Meal Planning</button> 
       <div className="homeGridContainer">
         <div className="leftColumn homeColumn">
           <p>
-            {" "}
             Turning Meal Planning from Chore to Cheer.
           </p>
         </div>
@@ -71,7 +97,6 @@ function User() {
           <p>
           Feast Your Eyes, Fuel Your Soul.
           </p>
-          <button>does nothing(user page)</button>
         </div>
         <div>
           <h2>User Profile</h2>
@@ -79,15 +104,18 @@ function User() {
           <p>First Name: {userData?.first_name}</p>
           <p>Last Name: {userData?.last_name}</p>
           <p>Email: {userData?.email}</p>
-        </div>
+          </div>
+          <div>
+            {/* <button onClick={() => setIsEditing(true)}>Edit Profile</button> */}
+          </div>
         <div>
-          <button className="button" onClick={() => navigate('/recipes')}>View Recipes</button> 
-          <button className="button" onClick={() => navigate('/recipes')}>Meal Planning</button> 
-          <button className="button" onClick={() => navigate('/recipes')}>Edit User</button> 
-          <button className="button" onClick={() => navigate('/recipes')}>Delete Account</button> 
-        </div>
-      </div>
-    </>
+        <button className="button" onClick={() => setIsEditing(!isEditing)}>Toggle Edit User</button> 
+          {/* <button className="button" onClick={() => navigate('/recipes')}>Delete Account</button>  */}
+              </div>
+            </div>
+        </>
+      )}
+    </div>
   );
 }
 
