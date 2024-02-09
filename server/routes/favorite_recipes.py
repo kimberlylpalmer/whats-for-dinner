@@ -2,7 +2,7 @@
 
 from flask import request, session, make_response
 from flask_restful import Resource
-from models import UserFavorite
+from models import UserFavorite, User
 from schemas import RecipeSchema
 from config import db
 
@@ -31,28 +31,30 @@ class FavoriteRecipes(Resource):
             # Check if the recipe already exists in favorites
             existing_favorite = UserFavorite.query.filter_by(user_id=user_id, recipe_id=recipe_id).first()
             if existing_favorite:
-                return {"error": "Recipe already marked as favorite"}, 400
-
-            # Add new favorite
-            new_favorite = UserFavorite(user_id=user_id, recipe_id=recipe_id)
-            db.session.add(new_favorite)
+                db.session.delete(existing_favorite)
+                action = "removed"
+            else:
+                new_favorite = UserFavorite(user_id=user_id, recipe_id=recipe_id)
+                
+                db.session.add(new_favorite)
+                action = "added"
             db.session.commit()
-
-            return {"message": "Recipe added to favorites"}, 201
+            message = f"Recipe {action}"
+            return {"message": message}, 200
 
         return {"error": "User not authenticated"}, 401
     
-    def delete(self):
-        user_id = session.get("user_id")
-        if user_id:
-            recipe_id = request.json.get("recipe_id")
+    # def delete(self):
+    #     user_id = session.get("user_id")
+    #     if user_id:
+    #         recipe_id = request.json.get("recipe_id")
             
-            favorite = UserFavorite.query.filter_by(user_id=user_id, recipe_id=recipe_id).first()
-            if not favorite:
-                return {"error": "Favorite recipe not found"}, 404
+    #         favorite = UserFavorite.query.filter_by(user_id=user_id, recipe_id=recipe_id).first()
+    #         if not favorite:
+    #             return {"error": "Favorite recipe not found"}, 404
             
-            db.session.delete(favorite)
-            db.session.commit()
+    #         db.session.delete(favorite)
+    #         db.session.commit()
             
-            return {"message": "Recipe removed from favorites"}, 200
-        return {"error": "User not authenticated"}, 401
+    #         return {"message": "Recipe removed from favorites"}, 200
+    #     return {"error": "User not authenticated"}, 401

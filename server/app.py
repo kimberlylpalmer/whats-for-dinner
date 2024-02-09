@@ -79,10 +79,7 @@ api.add_resource(UserById, "/api/user/<int:id>", endpoint='userbyid')
 api.add_resource(Recipes, "/api/recipes")
 api.add_resource(RecipeById, "/api/recipes/<int:id>", endpoint='recipebyid')
 api.add_resource(FavoriteRecipes, "/api/favorites")
-# api.add_resource(RecipesByIngredient, "/recipes/ingredient/<string:ingredient_name>", endpoint='recipesbyingredient')
 api.add_resource(RecipesByMealType, "/api/recipes/mealtype/<string:meal_type>", endpoint='recipesbymealtype')
-# api.add_resource(Calendar, "/calendar/<int:recipe_id>")      
-# api.add_resource(CalendarById, "/calendar/<int:id>", endpoint="calendar_by_id")
 api.add_resource(MealTypeResource, '/api/meal_type')
 
 

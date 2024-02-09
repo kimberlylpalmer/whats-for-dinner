@@ -3,6 +3,7 @@ import defaultImage from "../assets/pexels-karolina-grabowska-4033639.jpg";
 import { useAuth } from "../components/AuthContext";
 import EditRecipeForm from "./EditRecipe";
 import { useNavigate } from "react-router-dom";
+import FavoriteButton from './FavoriteButton';
 
 function RecipeCard({ recipe, onRecipeUpdate, onRecipeDelete }) {
   const { user } = useAuth();
@@ -44,6 +45,8 @@ function RecipeCard({ recipe, onRecipeUpdate, onRecipeDelete }) {
       });
   };
 
+
+
   return (
     <div className="card">
       {isEditing ? (
@@ -81,6 +84,9 @@ function RecipeCard({ recipe, onRecipeUpdate, onRecipeDelete }) {
               <p key={index}>{line}</p>
             ))}
           </div>
+                <div>
+                  <FavoriteButton  recipeId={recipe.id} className="button" />
+                </div>
           {isAuthor && (
             <>
               <button className="button" onClick={handleRecipeDelete}>
@@ -88,7 +94,7 @@ function RecipeCard({ recipe, onRecipeUpdate, onRecipeDelete }) {
               </button>
               <button className="button" onClick={toggleEdit}>
                 Update Recipe
-              </button>
+                </button>
             </>
           )}
         </>
