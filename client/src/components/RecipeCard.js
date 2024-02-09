@@ -87,7 +87,7 @@ function RecipeCard({ recipe, onRecipeUpdate, onRecipeDelete }) {
                 Delete Recipe
               </button>
               <button className="button" onClick={toggleEdit}>
-                Edit Recipe
+                Update Recipe
               </button>
             </>
           )}
