@@ -31,9 +31,6 @@ export default function Login() {
                 login(data);
                 console.log(data)
                 navigate('/user');
-                // localStorage.setItem("user", JSON.stringify(data));  //this is added to locally store the user data for the user page
-                // loginInfo(data);
-                // setUser(data);
             })
             .catch((e) => {
                 console.error(e);

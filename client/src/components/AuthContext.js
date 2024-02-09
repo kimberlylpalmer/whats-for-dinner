@@ -10,7 +10,7 @@ const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   
   useEffect(() => {
-    const userData = localStorage.getItem('user');
+    const userData = sessionStorage.getItem('user');
     if (userData) {
       setAuthenticated(true);
       setUser(JSON.parse(userData));
@@ -19,14 +19,14 @@ const AuthProvider = ({ children }) => {
   }, []);
 
   const login = (userData) => {
-    localStorage.setItem('user', JSON.stringify(userData));
+    sessionStorage.setItem('user', JSON.stringify(userData));
     setAuthenticated(true);
     setUser(userData);
     // Set cookies if using cookies for session management
   };
   
   const logout = () => {
-    localStorage.removeItem('user');
+    sessionStorage.removeItem('user');
     setAuthenticated(false);
     document.cookie = "session=; Max-Age=-99999999; path=/";
     setUser(null);

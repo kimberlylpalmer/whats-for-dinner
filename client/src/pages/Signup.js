@@ -31,9 +31,7 @@ export default function Signup() {
             },
             body: JSON.stringify(loginInfo),
         })
-            // .then((r) => r.json())
-            // .then((data) => {
-            //     setUser(data);
+
             .then((r) => {
                 console.log("Raw response from signup:", r); // Log the raw response
                 if (!r.ok) {
