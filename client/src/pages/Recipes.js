@@ -3,12 +3,13 @@ import RecipeCard from "../components/RecipeCard";
 import NavBar from "../components/NavBar";
 import { useNavigate } from "react-router-dom";
 import "../styles.css";
+import { useAuth } from '../components/AuthContext';
 
 function Recipes() {
+
   const [recipes, setRecipes] = useState([]);
   const [viewMode, setViewMode] = useState('all');
   const navigate = useNavigate();
-  const [showFavorites, setShowFavorites] = useState(false);
 
   const handleNavigateToUser = () => {
     navigate("/user");
@@ -60,7 +61,7 @@ function Recipes() {
         <button className='button' onClick={handleNavigateToUser}>Back to User Page</button>
         <button className='button' onClick={handleNavigateToRecipeForm}>Add New Recipe</button>
         <button className='button' onClick={() => setViewMode('all')}>Show All Recipes</button>
-        <button className='button' onClick={() => setViewMode('favorites')}>Show Favorites</button>
+        <button className='button' onClick={console.log("this should show favorite recipes")}>Show Favorites</button>
         <button className='button' onClick={() => setViewMode('authored')}>My Recipes</button>
         {/* <button className='button' onClick={() => setShowFavorites(!showFavorites)}>
           {showFavorites ? 'Show All Recipes' : 'Show Favorites'}
@@ -73,6 +74,7 @@ function Recipes() {
             recipe={recipe}
             onRecipeUpdate={handleRecipeUpdate}
             onRecipeDelete={handleRecipeDelete}
+            // isFavorited={favoriteRecipes.includes(recipe.id)}
           />
         ))}
       </div>

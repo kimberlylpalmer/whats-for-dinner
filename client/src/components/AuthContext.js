@@ -13,11 +13,13 @@ const AuthProvider = ({ children }) => {
     const userData = sessionStorage.getItem('user');
     if (userData) {
       setAuthenticated(true);
-      setUser(JSON.parse(userData));
+      // setUser(JSON.parse(userData));
+      const parsedUserData = JSON.parse(userData);
+      setUser(parsedUserData);
     }
      // You can also check for authentication cookies here if necessary
   }, []);
-
+  
   const login = (userData) => {
     sessionStorage.setItem('user', JSON.stringify(userData));
     setAuthenticated(true);

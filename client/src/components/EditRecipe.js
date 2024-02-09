@@ -179,18 +179,8 @@ const EditRecipeForm = ({recipe, onCancel, onUpdate}) => {
         placeholder="Enter image URL"
       />
       <br></br>
-
-      <label htmlFor="directions">Directions</label>
-      <br></br>
-      <textarea
-        id="directions"
-        name="directions"
-        onChange={formik.handleChange}
-        value={formik.values.directions}
-        className="form-input"
-      />
       <div>
-        <label htmlFor="directions">Ingredients</label>
+        <label htmlFor="ingredients">Ingredients</label>
         {formik.values.ingredients.map((ingredient, index) => (
           <div key={index}>
             <input
@@ -214,6 +204,16 @@ const EditRecipeForm = ({recipe, onCancel, onUpdate}) => {
           Add Another Ingredient
         </button>
       </div>
+
+      <label htmlFor="directions">Directions</label>
+      <br></br>
+      <textarea
+        id="directions"
+        name="directions"
+        onChange={formik.handleChange}
+        value={formik.values.directions}
+        className="form-input"
+      />
       <button type="submit" className="button">
         Update Recipe
           </button>

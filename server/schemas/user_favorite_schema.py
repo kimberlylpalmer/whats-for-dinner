@@ -16,3 +16,6 @@ class UserFavoriteSchema(SQLAlchemyAutoSchema):
         'user': ma.URLFor('UserById', id='<user_id>'),
         'recipe': ma.URLFor('RecipeById', id='<recipe_id>')
     })
+    
+    
+    

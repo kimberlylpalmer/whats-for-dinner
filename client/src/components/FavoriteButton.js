@@ -1,31 +1,27 @@
-import React, { useState, useEffect } from "react";
+//FavoriteButton.js
 
-function FavoriteButton({ recipeId, isInitiallyFavorite }) {
+import React, { useState, useEffect, useContext } from "react";
+import { useAuth } from '../components/AuthContext';
+
+function FavoriteButton({ recipeId, isFavorited }) {
+  const { toggleFavorite, userFavorites, updateUserFavorites } = useAuth();
+  const isInitiallyFavorite = userFavorites.includes(recipeId);
   const [isFavorite, setIsFavorite] = useState(isInitiallyFavorite);
 
-  const toggleFavorite = async () => {
+  useEffect(() => {
+    setIsFavorite(userFavorites.includes(recipeId));
+  }, [userFavorites, recipeId])
+
+  const handleToggleFavorite = async () => {
     try {
-      const response = await fetch("/api/favorites", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ recipe_id: recipeId }),
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to update favorite status");
-      }
-
-      setIsFavorite(!isFavorite); // Toggle local state
+      await toggleFavorite(recipeId);
+      updateUserFavorites(recipeId, !isFavorite);
+      setIsFavorite(!isFavorite);
     } catch (error) {
       console.error("Error toggling favorite status:", error);
-    }
+    } 
   };
 
-  useEffect(() => {
-    setIsFavorite(isInitiallyFavorite);
-  }, [isInitiallyFavorite]);
 
   return (
     <button onClick={toggleFavorite} className="button">

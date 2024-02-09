@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useFormik } from "formik";
 import { useAuth } from "./AuthContext";
 import NavBar from "../components/NavBar";
@@ -8,6 +8,7 @@ const RecipeForm = () => {
   const { user } = useAuth();
   const [mealTypes, setMealTypes] = useState([]);
   const navigate = useNavigate();
+  const measurementInputRef = useRef(null);
 
   useEffect(() => {
     fetch("/api/meal_type")
@@ -83,9 +84,13 @@ const RecipeForm = () => {
       { name: "", measurement: "" },
     ];
     formik.setFieldValue("ingredients", newIngredients);
+
+    if (measurementInputRef.current) {
+      measurementInputRef.current.focus();
+    }
+    // Optionally, focus the next input field if desired
   };
 
-  // Function to handle removing an ingredient input
   const removeIngredient = (index) => {
     const newIngredients = formik.values.ingredients.filter(
       (_, idx) => idx !== index
@@ -176,46 +181,69 @@ const RecipeForm = () => {
       />
       <br></br>
 
-      <label htmlFor="directions">Directions</label>
-        <p>Please enter each step on a new line. Example:</p>
-        <div className="directions-example">
-          Step 1: Mix the ingredients.<br />
-          Step 2: Bake for 50 minutes.<br />
-          Step 3: Let it cool.
-        </div>
-        <textarea
-          id="directions"
-          name="directions"
-          onChange={formik.handleChange}
-          value={formik.values.directions}
-          className="form-input"
-          rows="10"
-        />
       <div>
-        <label htmlFor="directions">Ingredients</label>
-        {formik.values.ingredients.map((ingredient, index) => (
+        <lable htmlFor="Ingredients">Ingredients: </lable>
+        {formik.values.ingredients.slice(0, -1).map((ingredient, index) => (
           <div key={index}>
-            <input
-              name={`ingredients[${index}].measurement`}
-              value={ingredient.measurement}
-              onChange={formik.handleChange}
-              placeholder="Measurement"
-            />
-            <input
-              name={`ingredients[${index}].name`}
-              value={ingredient.name}
-              onChange={formik.handleChange}
-              placeholder="Ingredient Name"
-            />
+            <span>
+              {ingredient.measurement} {ingredient.name}
+            </span>
             <button type="button" onClick={() => removeIngredient(index)}>
-              Remove
+              X
             </button>
           </div>
         ))}
+
+        <div>
+          <input
+            ref={measurementInputRef}
+            name={`ingredients[${
+              formik.values.ingredients.length - 1
+            }].measurement`}
+            placeholder="Measurement"
+            value={
+              formik.values.ingredients[formik.values.ingredients.length - 1]
+                .measurement
+            }
+            onChange={formik.handleChange}
+          />
+          <input
+            name={`ingredients[${formik.values.ingredients.length - 1}].name`}
+            placeholder="Ingredient Name"
+            value={
+              formik.values.ingredients[formik.values.ingredients.length - 1]
+                .name
+            }
+            onChange={formik.handleChange}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && e.currentTarget.value) {
+                e.preventDefault();
+                addIngredient();
+              }
+            }}
+          />
+        </div>
         <button type="button" onClick={addIngredient}>
           Add Another Ingredient
         </button>
       </div>
+      <label htmlFor="directions">Directions</label>
+      <p>Please enter each step on a new line. Example:</p>
+      <div className="directions-example">
+        Step 1: Mix the ingredients.
+        <br />
+        Step 2: Bake for 50 minutes.
+        <br />
+        Step 3: Let it cool.
+      </div>
+      <textarea
+        id="directions"
+        name="directions"
+        onChange={formik.handleChange}
+        value={formik.values.directions}
+        className="form-input"
+        rows="10"
+      />
       <button type="submit" className="button">
         Submit Recipe
       </button>
