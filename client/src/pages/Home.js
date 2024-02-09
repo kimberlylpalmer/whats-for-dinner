@@ -7,14 +7,6 @@ import { useNavigate } from "react-router-dom";
 
 function Home() {
   const navigate = useNavigate();
-  // useEffect(() => {
-  //   // Perform the fetch request to the test-cors endpoint
-  //   fetch('/api/test-cors')
-  //     .then(response => response.json())
-  //     .then(data => console.log(data))
-  //     .catch(error => console.error('Error fetching test CORS:', error));
-  // }, []);
-
 
     return (
       <>

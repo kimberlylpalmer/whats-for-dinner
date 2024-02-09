@@ -6,6 +6,7 @@ import "../styles.css";
 
 function Recipes() {
   const [recipes, setRecipes] = useState([]);
+  const [viewMode, setViewMode] = useState('all');
   const navigate = useNavigate();
   const [showFavorites, setShowFavorites] = useState(false);
 
@@ -28,7 +29,13 @@ function Recipes() {
   };
 
   useEffect(() => {
-    const endpoint = showFavorites ? 'api/favorites' : 'api/recipes';
+    let endpoint = 'api/recipes';
+    if (viewMode === 'favorites') {
+      endpoint = 'api/favorites';
+    } else if (viewMode === 'authored') {
+      endpoint = 'api/authored';
+    }
+
     fetch(endpoint)
       .then((response) => response.json())
       .then((data) => {
@@ -36,7 +43,7 @@ function Recipes() {
         console.log(data); // Log to see the fetched data
       })
       .catch((error) => console.error("Error fetching recipes:", error));
-  }, [showFavorites]);
+  }, [viewMode]);
 
   const handleRecipeDelete = (recipeId) => {
     setRecipes((prevRecipes) =>
@@ -52,9 +59,12 @@ function Recipes() {
       <div>
         <button className='button' onClick={handleNavigateToUser}>Back to User Page</button>
         <button className='button' onClick={handleNavigateToRecipeForm}>Add New Recipe</button>
-        <button className='button' onClick={() => setShowFavorites(!showFavorites)}>
+        <button className='button' onClick={() => setViewMode('all')}>Show All Recipes</button>
+        <button className='button' onClick={() => setViewMode('favorites')}>Show Favorites</button>
+        <button className='button' onClick={() => setViewMode('authored')}>My Recipes</button>
+        {/* <button className='button' onClick={() => setShowFavorites(!showFavorites)}>
           {showFavorites ? 'Show All Recipes' : 'Show Favorites'}
-        </button>
+        </button> */}
       </div>
       <div id="recipe-container">
         {recipes.map((recipe) => (

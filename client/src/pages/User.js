@@ -7,7 +7,7 @@ import EditUserForm from "../components/EditUser";
 
 
 function User() {
-  const [userData, setUserData] = useState(() => JSON.parse(localStorage.getItem('user')));
+  const [userData, setUserData] = useState(() => JSON.parse(sessionStorage.getItem('user')));
   const [isEditing, setIsEditing] = useState(false);
 
   const handleUpdateUser = async (updatedUserData) => {
@@ -24,7 +24,7 @@ function User() {
       }
       const data = await response.json();
       setUserData(data);
-      localStorage.setItem('user', JSON.stringify(data));
+      sessionStorage.setItem('user', JSON.stringify(data));
       setIsEditing(false);
     } catch (error) {
       console.error(error);
