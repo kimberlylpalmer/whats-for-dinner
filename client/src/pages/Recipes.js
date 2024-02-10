@@ -3,12 +3,13 @@ import RecipeCard from "../components/RecipeCard";
 import NavBar from "../components/NavBar";
 import { useNavigate } from "react-router-dom";
 import "../styles.css";
+import { useAuth } from "../components/AuthContext";
 
 function Recipes() {
   const [recipes, setRecipes] = useState([]);
-  const [viewMode, setViewMode] = useState('all');
+  const [viewMode, setViewMode] = useState("all");
+  const { user } = useAuth();
   const navigate = useNavigate();
-  const [showFavorites, setShowFavorites] = useState(false);
 
   const handleNavigateToUser = () => {
     navigate("/user");
@@ -29,11 +30,11 @@ function Recipes() {
   };
 
   useEffect(() => {
-    let endpoint = 'api/recipes';
-    if (viewMode === 'favorites') {
-      endpoint = 'api/favorites';
-    } else if (viewMode === 'authored') {
-      endpoint = 'api/authored';
+    let endpoint = "api/recipes";
+    if (viewMode === "favorites") {
+      endpoint = "api/favorites";
+    } else if (viewMode === "authored") {
+      endpoint = "api/authored";
     }
 
     fetch(endpoint)
@@ -50,6 +51,11 @@ function Recipes() {
       prevRecipes.filter((recipe) => recipe.id !== recipeId)
     );
   };
+
+  const testClick = () => {
+    console.log("Show Favorites was clicked");
+  };
+
   return (
     <div>
       <header>
@@ -57,14 +63,21 @@ function Recipes() {
       </header>
       <h1> Recipes </h1>
       <div>
-        <button className='button' onClick={handleNavigateToUser}>Back to User Page</button>
-        <button className='button' onClick={handleNavigateToRecipeForm}>Add New Recipe</button>
-        <button className='button' onClick={() => setViewMode('all')}>Show All Recipes</button>
-        <button className='button' onClick={() => setViewMode('favorites')}>Show Favorites</button>
-        <button className='button' onClick={() => setViewMode('authored')}>My Recipes</button>
-        {/* <button className='button' onClick={() => setShowFavorites(!showFavorites)}>
-          {showFavorites ? 'Show All Recipes' : 'Show Favorites'}
-        </button> */}
+        <button className="button" onClick={handleNavigateToUser}>
+          Back to User Page
+        </button>
+        <button className="button" onClick={handleNavigateToRecipeForm}>
+          Add New Recipe
+        </button>
+        <button className="button" onClick={() => setViewMode("all")}>
+          Show All Recipes
+        </button>
+        <button className="button" onClick={() => setViewMode("favorites")}>
+          Show Favorites
+        </button>
+        <button className="button" onClick={() => setViewMode("authored")}>
+          My Recipes
+        </button>
       </div>
       <div id="recipe-container">
         {recipes.map((recipe) => (
@@ -73,6 +86,7 @@ function Recipes() {
             recipe={recipe}
             onRecipeUpdate={handleRecipeUpdate}
             onRecipeDelete={handleRecipeDelete}
+            // isFavorited={favoriteRecipes.includes(recipe.id)}
           />
         ))}
       </div>

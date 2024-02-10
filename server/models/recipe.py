@@ -6,8 +6,6 @@ from sqlalchemy.orm import relationship, validates
 from datetime import time
 
 
-# import models
-
 
 class Recipe(db.Model):
     __tablename__ = "recipes"
@@ -34,16 +32,7 @@ class Recipe(db.Model):
             raise TypeError("Title must be a string")
         elif len(title) < 3:
             raise ValueError("Title must be at least 3 characters.")
-        return title
-
-    # @validates("cooking_time")
-    # def validate_cooking_time(self, key, value):
-    #     if not isinstance(value, time) and value is not None:
-    #         raise TypeError("Cooking time must be a valid time format or None.")
-    #     elif value == time(0, 0):
-    #         raise ValueError("Cooking time cannot be 00:00.")
-    #     return value
-    
+        return title    
     
     def __repr__(self):
         return f"<Recipe {self.title} by User ID {self.author_id}>"

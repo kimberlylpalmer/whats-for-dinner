@@ -58,3 +58,6 @@ class FavoriteRecipes(Resource):
             
     #         return {"message": "Recipe removed from favorites"}, 200
     #     return {"error": "User not authenticated"}, 401
+    
+    
+    
