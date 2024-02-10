@@ -10,6 +10,7 @@ function RecipeCard({ recipe, onRecipeUpdate, onRecipeDelete }) {
   const [isEditing, setIsEditing] = useState(false);
   const navigate = useNavigate();
   const [isFavorited, setIsFavorited] = useState(false);
+  const [mealTypes, setMealTypes] = useState([])
 
   useEffect(() => {
     if (authenticated) {
@@ -34,10 +35,7 @@ function RecipeCard({ recipe, onRecipeUpdate, onRecipeDelete }) {
           console.error("Error fetching favorite recipes:", error);
         });
     }
-     // Initially set isFavorited based on whether the recipe is in the user's favorites
-    // This might involve fetching user's favorite recipes or checking a local state that tracks favorites
-    // For demonstration, assuming a function checkFavoriteStatus that returns true if favorited
-    // setIsFavorited(checkFavoriteStatus(recipe.id));
+
   }, [recipe.id, authenticated]);
 
   const toggleEdit = () => {
@@ -102,6 +100,20 @@ function RecipeCard({ recipe, onRecipeUpdate, onRecipeDelete }) {
     }
   };
 
+  useEffect(() => {
+    fetch('/api/meal_type')
+      .then(r => r.json())
+      .then(data => {
+        setMealTypes(data.meal_types || []);
+      })
+      .catch(error => console.error('failed to fetch meal type', error));
+  }, []);
+
+  const getMealTypeName = (mealTypeId) => {
+    const mealType = mealTypes.find(type => type.id === mealTypeId);
+    return mealType ? mealType.type : 'Unknown';
+  };
+
 
   return (
     <div className="card">
@@ -127,9 +139,10 @@ function RecipeCard({ recipe, onRecipeUpdate, onRecipeDelete }) {
               alt={recipe.title}
             />
           </div>
-          <p>Meal Type: {recipe.mealType}</p>
-          <p>Cooking Time: {recipe.cooking_time}</p>
-          <p>Author: {recipe.author_username}</p>
+            {/* <p>Meal Type: {recipe.meal_type_id}</p> */}
+            <p>Meal Type: {getMealTypeName(recipe.meal_type_id)}</p>
+            <p>Cooking Time: {recipe.cooking_time}</p>
+            <p>Author: {recipe.author_username}</p>
           <div>
             <p>Ingredients:</p>
             <ul>
