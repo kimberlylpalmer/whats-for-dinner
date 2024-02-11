@@ -7,6 +7,8 @@ import { useAuth } from "../components/AuthContext";
 
 function Recipes() {
   const [recipes, setRecipes] = useState([]);
+  const [mealTypes, setMealTypes] = useState([]);
+  const [selectedMealTypeId, setSelectedMealTypeId] = useState("");
   const [viewMode, setViewMode] = useState("all");
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -30,11 +32,26 @@ function Recipes() {
   };
 
   useEffect(() => {
+    fetch("/api/meal_type")
+      .then((response) => response.json())
+      .then((data) => setMealTypes(data.meal_types || []))
+      .catch((error) => console.error("Error fetching meal types:", error));
+  }, []);
+  
+
+  useEffect(() => {
     let endpoint = "api/recipes";
     if (viewMode === "favorites") {
       endpoint = "api/favorites";
     } else if (viewMode === "authored") {
       endpoint = "api/authored";
+    }
+
+    if (selectedMealTypeId) {
+      const selectedMealType = mealTypes.find(type => type.id === parseInt(selectedMealTypeId));
+      if (selectedMealType) {
+        endpoint = `/api/recipes/mealtype/${selectedMealType.type}`;
+      }
     }
 
     fetch(endpoint)
@@ -44,16 +61,17 @@ function Recipes() {
         console.log(data); // Log to see the fetched data
       })
       .catch((error) => console.error("Error fetching recipes:", error));
-  }, [viewMode]);
+  }, [viewMode, selectedMealTypeId, mealTypes]);
 
   const handleRecipeDelete = (recipeId) => {
     setRecipes((prevRecipes) =>
       prevRecipes.filter((recipe) => recipe.id !== recipeId)
     );
   };
-
-  const testClick = () => {
-    console.log("Show Favorites was clicked");
+  
+  const handleMealTypeChange = (e) => {
+    setSelectedMealTypeId(e.target.value);
+    setViewMode("all"); // Reset view mode to show all when filtering by meal type
   };
 
   return (
@@ -78,6 +96,12 @@ function Recipes() {
         <button className="button" onClick={() => setViewMode("authored")}>
           My Recipes
         </button>
+        <select onChange={handleMealTypeChange} value={selectedMealTypeId}>
+          <option value="">Filter by Meal Type</option>
+          {mealTypes.map((type) => (
+            <option key={type.id} value={type.id}>{type.type}</option>
+          ))}
+        </select>
       </div>
       <div id="recipe-container">
         {recipes.map((recipe) => (
