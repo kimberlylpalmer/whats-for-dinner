@@ -74,6 +74,11 @@ function Recipes() {
     setViewMode("all"); // Reset view mode to show all when filtering by meal type
   };
 
+  const handleNavigateToMealPlanner = () => {
+    console.log("Meal Planner was clicked")
+    navigate("/meal-planner");
+  }
+
   return (
     <div>
       <header>
@@ -96,6 +101,9 @@ function Recipes() {
         <button className="button" onClick={() => setViewMode("authored")}>
           My Recipes
         </button>
+        {/* <button className="button" onClick={handleNavigateToMealPlanner}>
+          Meal Planner
+        </button> */}
         <select onChange={handleMealTypeChange} value={selectedMealTypeId}>
           <option value="">Filter by Meal Type</option>
           {mealTypes.map((type) => (

@@ -14,7 +14,8 @@ import Login from "./Login";
 import Home from "./Home";
 import User from "./User";
 import Signup from "./Signup";
-import Recipes from "./Recipes"
+import Recipes from "./Recipes";
+// import MealPlanner from "./MealPlanner";
 // import NavBar from "../components/NavBar";
 
 
@@ -31,6 +32,7 @@ const App = () => {
           <Route path="/signup" element={<Signup />} />
           <Route path="/user" element={<PrivateRoute><User /></PrivateRoute>} />
           <Route path="/recipes" element={<Recipes />} />
+          {/* <Route path="/meal-planner" element={<MealPlanner />} /> */}
           <Route 
             path="/submit-recipe" 
             element={
