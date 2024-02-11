@@ -74,10 +74,10 @@ function Recipes() {
     setViewMode("all"); // Reset view mode to show all when filtering by meal type
   };
 
-  const handleNavigateToMealPlanner = () => {
-    console.log("Meal Planner was clicked")
-    navigate("/meal-planner");
-  }
+  // const handleNavigateToMealPlanner = () => {
+  //   console.log("Meal Planner was clicked")
+  //   navigate("/meal-planner");
+  // }
 
   return (
     <div>
@@ -89,10 +89,12 @@ function Recipes() {
         <button className="button" onClick={handleNavigateToUser}>
           Back to User Page
         </button>
+        {user &&
+       <>
         <button className="button" onClick={handleNavigateToRecipeForm}>
           Add New Recipe
         </button>
-        <button className="button" onClick={() => setViewMode("all")}>
+       <button className="button" onClick={() => setViewMode("all")}>
           Show All Recipes
         </button>
         <button className="button" onClick={() => setViewMode("favorites")}>
@@ -100,7 +102,9 @@ function Recipes() {
         </button>
         <button className="button" onClick={() => setViewMode("authored")}>
           My Recipes
-        </button>
+          </button>
+        </>
+        }
         {/* <button className="button" onClick={handleNavigateToMealPlanner}>
           Meal Planner
         </button> */}

@@ -27,7 +27,7 @@ function Home() {
             <p>Feast Your Eyes, Fuel Your Soul.</p>
           </div>
           <div>
-            <button className="button" onClick={() => navigate('/recipes')}>View Recipes</button> 
+            {/* <button className="button" onClick={() => navigate('/recipes')}>View Recipes</button>  */}
           </div>
         </div>
       </>
