@@ -80,7 +80,7 @@ function User() {
         {/* <p>User ID: {userData?.id}</p> */}
       </main>
           <button className="button" onClick={() => navigate('/recipes')}>View Recipes</button> 
-          <button className="button" onClick={() => navigate('/recipes')}>Meal Planning</button> 
+          {/* <button className="button" onClick={() => navigate('/recipes')}>Meal Planning</button>  */}
       <div className="homeGridContainer">
         <div className="leftColumn homeColumn">
           <p>
