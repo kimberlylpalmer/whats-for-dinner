@@ -5,7 +5,7 @@ import { useAuth } from "./AuthContext";
 
 
 
-function EditUserForm({ userData, onUpdateUser }) {
+function EditUserForm({ userData, onUpdateUser, onCancel }) {
   // Local state to manage form inputs, initialized from props
   const [firstName, setFirstName] = useState(userData.first_name);
   const [lastName, setLastName] = useState(userData.last_name);
@@ -51,7 +51,8 @@ function EditUserForm({ userData, onUpdateUser }) {
           onChange={(e) => setEmail(e.target.value)}
         />
       </div>
-      <button type="submit">Update Profile</button>
+      <button type="submit" className='button'>Update Profile</button>
+      <button type="button" className='button' onClick={onCancel}>Cancel</button>
     </form>
   );
 }

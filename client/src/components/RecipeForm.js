@@ -10,8 +10,6 @@ const RecipeForm = () => {
   const navigate = useNavigate();
   const measurementInputRef = useRef(null);
 
-  
-
   useEffect(() => {
     fetch("/api/meal_type")
       .then((r) => {
@@ -43,8 +41,8 @@ const RecipeForm = () => {
       const { cookingHours, cookingMinutes, ...rest } = values;
       const cookingTime = `${cookingHours ? `${cookingHours} hour(s)` : ""} ${
         cookingMinutes ? `${cookingMinutes} minute(s)` : ""
-        }`.trim();
-      
+      }`.trim();
+
       console.log(values);
       if (!user) {
         alert("Please log in to submit a recipe.");
@@ -114,8 +112,12 @@ const RecipeForm = () => {
         <NavBar />
       </header>
       <div>
-        <button onClick={handleNavigateToUser}>Back to User Page</button>
-        <button onClick={handleNavigateToRecipes}>Back to Recipes Page</button>
+        <button className="button" onClick={handleNavigateToUser}>
+          Back to User Page
+        </button>
+        <button className="button" onClick={handleNavigateToRecipes}>
+          Back to Recipes Page
+        </button>
       </div>
       <div>
         <h1>New Recipe</h1>
@@ -151,7 +153,6 @@ const RecipeForm = () => {
         <br></br>
       </select>
       <br></br>
-      <p>space between here please</p>
       <label htmlFor="cookingHours">Hours: </label>
       <input
         id="cookingHours"
@@ -191,8 +192,11 @@ const RecipeForm = () => {
             <span>
               {ingredient.measurement} - {ingredient.name}
             </span>
-            <button type="button" onClick={() => removeIngredient(index)}> 
-              X 
+            <button
+              className="button"
+              type="button"
+              onClick={() => removeIngredient(index)}>
+              X
             </button>
           </div>
         ))}
@@ -226,7 +230,7 @@ const RecipeForm = () => {
             }}
           />
         </div>
-        <button type="button" onClick={addIngredient}>
+        <button type="button" className="button" onClick={addIngredient}>
           Add Another Ingredient
         </button>
       </div>

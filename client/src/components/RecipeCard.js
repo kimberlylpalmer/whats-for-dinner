@@ -10,33 +10,32 @@ function RecipeCard({ recipe, onRecipeUpdate, onRecipeDelete }) {
   const [isEditing, setIsEditing] = useState(false);
   const navigate = useNavigate();
   const [isFavorited, setIsFavorited] = useState(false);
-  const [mealTypes, setMealTypes] = useState([]);
+  const [mealTypes, setMealTypes] = useState([])
 
   useEffect(() => {
     if (authenticated) {
       fetch(`/api/favorites`, {
-        method: "GET",
-        credentials: "include",
+        method: 'GET',
+        credentials: 'include',
         headers: {
           "Content-Type": "application/json",
         },
       })
-        .then((response) => {
+        .then(response => {
           if (!response.ok) {
             throw new Error("failed to fetch favorite recipes");
           }
           return response.json();
         })
-        .then((favoriteRecipes) => {
-          const isFavorite = favoriteRecipes.some(
-            (favRecipe) => favRecipe.id === recipe.id
-          );
+        .then(favoriteRecipes => {
+          const isFavorite = favoriteRecipes.some((favRecipe) => favRecipe.id === recipe.id);
           setIsFavorited(isFavorite);
         })
-        .catch((error) => {
+        .catch(error => {
           console.error("Error fetching favorite recipes:", error);
         });
     }
+
   }, [recipe.id, authenticated]);
 
   const toggleEdit = () => {
@@ -85,35 +84,36 @@ function RecipeCard({ recipe, onRecipeUpdate, onRecipeDelete }) {
         },
         body: JSON.stringify({ recipe_id: recipe.id }),
       })
-        .then((response) => {
+        .then(response => {
           if (!response.ok) {
-            console.error("2. Response not OK, status:", response.status);
-            return response.text();
-          }
-          return response.json();
+          console.error("2. Response not OK, status:", response.status);
+          return response.text();
+        }
+         return response.json();
         })
-        .then((data) => {
+        .then(data => {
           console.log("3. Toggle favorite response data:", data);
           // setIsFavorited(data.isFavorited);
-          setIsFavorited((prevState) => !prevState);
-        })
-        .catch((error) => console.error("4. Error toggling favorite:", error));
+          setIsFavorited(prevState => !prevState);
+      })
+      .catch(error => console.error("4. Error toggling favorite:", error));
     }
   };
 
   useEffect(() => {
-    fetch("/api/meal_type")
-      .then((r) => r.json())
-      .then((data) => {
+    fetch('/api/meal_type')
+      .then(r => r.json())
+      .then(data => {
         setMealTypes(data.meal_types || []);
       })
-      .catch((error) => console.error("failed to fetch meal type", error));
+      .catch(error => console.error('failed to fetch meal type', error));
   }, []);
 
   const getMealTypeName = (mealTypeId) => {
-    const mealType = mealTypes.find((type) => type.id === mealTypeId);
-    return mealType ? mealType.type : "Unknown";
+    const mealType = mealTypes.find(type => type.id === mealTypeId);
+    return mealType ? mealType.type : 'Unknown';
   };
+
 
   return (
     <div className="card">
@@ -125,16 +125,13 @@ function RecipeCard({ recipe, onRecipeUpdate, onRecipeDelete }) {
         />
       ) : (
         <>
-          <h2>{recipe.title}</h2>
-          {authenticated && (
-            <button
-              className="button favorite-button"
-              onClick={toggleFavorite}
-              style={{ margin: "10px 0" }}>
-              {isFavorited ? "❤️" : "♡ Favorite Me!"}
-            </button>
-          )}
-
+          <h2>{recipe.title}  {isFavorited && <span style={{color: 'red'}}>❤️</span>}</h2>
+                {/* {authenticated && (
+          <button className="button favorite-button" onClick={toggleFavorite} style={{margin: "10px 0"}}>
+            {isFavorited ? "❤️" : "♡ Favorite Me!"}
+          </button>
+            )} */}
+            
           <div className="image-container">
             <img
               className="recipe-image"
@@ -142,8 +139,8 @@ function RecipeCard({ recipe, onRecipeUpdate, onRecipeDelete }) {
               alt={recipe.title}
             />
           </div>
-          {/* <p>Meal Type: {recipe.meal_type_id}</p> */}
-          <p>Meal Type: {getMealTypeName(recipe.meal_type_id)}</p>
+            {/* <p>Meal Type: {recipe.meal_type_id}</p> */}
+            
           <p>Cooking Time: {recipe.cooking_time}</p>
           <p>Author: {recipe.author_username}</p>
           <div>
@@ -161,8 +158,10 @@ function RecipeCard({ recipe, onRecipeUpdate, onRecipeDelete }) {
             {recipe.directions.split("\n").map((line, index) => (
               <p key={index}>{line}</p>
             ))}
-          </div>
-          <div></div>
+            </div>
+            <div>
+            </div>
+
 
           {isAuthor && (
             <>
@@ -171,12 +170,9 @@ function RecipeCard({ recipe, onRecipeUpdate, onRecipeDelete }) {
               </button>
               <button className="button" onClick={toggleEdit}>
                 Update Recipe
-              </button>
+                </button>
             </>
           )}
-          <a href="#" className="back-to-top">
-            Back to Top
-          </a>
         </>
       )}
     </div>
