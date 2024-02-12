@@ -20,7 +20,7 @@ from routes.recipe_by_id import RecipeById
 from routes.favorite_recipes import FavoriteRecipes
 from routes.meal_type import MealTypeResource
 from routes.authored_recipes import AuthoredRecipes
-from routes.meal_planner import MealPlanner
+# from routes.meal_planner import MealPlanner
 
 # from routes.authored_recipes import AuthoredRecipes
 from routes.recipes_by_meal_type import RecipesByMealType
@@ -31,8 +31,8 @@ from models.meal_type import MealType
 from flask_restful import Api
 from models.enums import MealTypeEnum
 
-CORS(app)
-# CORS(app, supports_credentials=True, origins=['http://localhost:3000'])
+# CORS(app)
+CORS(app, supports_credentials=True, origins=['http://localhost:3000'])
 # CORS(app, resources={r"/api/*": {"origins": "http://localhost:3000"}}, supports_credentials=True)
 
 api = Api(app)

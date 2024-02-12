@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useInsertionEffect, useState } from "react";
 import "../styles.css";
 import NavBar from "../components/NavBar";
 import { useNavigate } from "react-router-dom";
@@ -9,6 +9,9 @@ import EditUserForm from "../components/EditUser";
 function User() {
   const [userData, setUserData] = useState(() => JSON.parse(sessionStorage.getItem('user')));
   const [isEditing, setIsEditing] = useState(false);
+  const [userId, setUserId] = useState('theUserId');
+  const [recipes, setRecipes] = useState([]);
+  const [authoredRecipesCount, setAuthoredRecipesCount] = useState(0);
 
   const handleUpdateUser = async (updatedUserData) => {
     try {
@@ -66,6 +69,38 @@ function User() {
     }
   }, []);
 
+
+
+  useEffect(() => { 
+    fetch('/api/recipes')
+      .then(response => response.json())
+      .then(data => {
+        console.log(data);
+        setRecipes(data);
+      })
+      .catch(error => {
+        console.error('Error fetching authored recipes:', error);
+    })
+  }, [])
+
+  console.log("outside ", recipes)
+ 
+  useEffect(() => {
+    if (recipes.length > 0 && userData?.id) {
+      const count = recipes.filter(recipe => recipe.author_id.toString() === userData.id.toString()).length;
+      setAuthoredRecipesCount(count);
+      console.log(`Number of recipes authored by user ${userData.id}:`, authoredRecipesCount);
+    }
+  }, [recipes, userData.id]);
+  
+  const calculateAuthoredRecipes = () => {
+    const authoredRecipesCount = recipes.filter(recipes => recipes.author_id === userId).length;
+    console.log(`number of recipes ${userId}:`, authoredRecipesCount)
+    return authoredRecipesCount
+  }
+
+
+
   return (
     <div>
       <header>
@@ -77,10 +112,9 @@ function User() {
         <>
       <main className="homeBackground">
         <h1>Welcome {userData?.first_name}</h1>
-        {/* <p>User ID: {userData?.id}</p> */}
       </main>
           <button className="button" onClick={() => navigate('/recipes')}>View Recipes</button> 
-          {/* <button className="button" onClick={() => navigate('/recipes')}>Meal Planning</button>  */}
+          {/* <button className="button" onClick={() => navigate('/mealplanner')}>Meal Planning</button>  */}
       <div className="homeGridContainer">
         <div className="leftColumn homeColumn">
           <p>
@@ -104,12 +138,11 @@ function User() {
           <p>First Name: {userData?.first_name}</p>
           <p>Last Name: {userData?.last_name}</p>
           <p>Email: {userData?.email}</p>
-          </div>
-          <div>
-            {/* <button onClick={() => setIsEditing(true)}>Edit Profile</button> */}
+                <p>Contributed Recipes: </p>
+                <p>Contributed Recipes: {authoredRecipesCount}</p>
+        <button className="button" onClick={() => setIsEditing(!isEditing)}>Edit User Profile</button> 
           </div>
         <div>
-        <button className="button" onClick={() => setIsEditing(!isEditing)}>Toggle Edit User</button> 
           {/* <button className="button" onClick={() => navigate('/recipes')}>Delete Account</button>  */}
               </div>
             </div>

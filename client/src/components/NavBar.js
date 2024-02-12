@@ -15,6 +15,7 @@ function NavBar() {
                 <>
                     <NavLink to="/login" className="nav-link">Login</NavLink>
                     <NavLink to="/signup" className="nav-link">Signup</NavLink>
+                    <NavLink to="/recipes" className="nav-link">View Recipes</NavLink>
                 </>
             )}
             {authenticated && <LogoutButton />}
