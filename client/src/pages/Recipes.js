@@ -4,12 +4,17 @@ import NavBar from "../components/NavBar";
 import { useNavigate } from "react-router-dom";
 import "../styles.css";
 import { useAuth } from "../components/AuthContext";
+import RecipeSummaryCard from "../components/RecipeSummaryCard"; // Corrected path
+import RecipeModal from "../components/RecipeModal"; // This is your full recipe modal component
+
+
 
 function Recipes() {
   const [recipes, setRecipes] = useState([]);
   const [mealTypes, setMealTypes] = useState([]);
   const [selectedMealTypeId, setSelectedMealTypeId] = useState("");
   const [viewMode, setViewMode] = useState("all");
+  const [selectedRecipe, setSelectedRecipe] = useState(null);
   const { user } = useAuth();
   const navigate = useNavigate();
 
@@ -74,11 +79,28 @@ function Recipes() {
     setViewMode("all"); // Reset view mode to show all when filtering by meal type
   };
 
-  // const handleNavigateToMealPlanner = () => {
-  //   console.log("Meal Planner was clicked")
-  //   navigate("/meal-planner");
-  // }
+// to open the modal
+  const openRecipeModal = recipe => {
+    setSelectedRecipe(recipe);
+  };
 
+  //To close modal
+  const closeRecipeModal = () => {
+    setSelectedRecipe(null)
+  }
+
+  const toggleFavorite = (recipeId, isFavorited) => {
+    const updatedRecipes = recipes.map(recipe => {
+      if (recipe.id === recipeId) {
+        return { ...recipe, isFavorited: !isFavorited };
+      }
+      return recipe;
+    });
+    setRecipes(updatedRecipes);
+  };
+
+  console.log(selectedRecipe)
+  
   return (
     <div>
       <header>
@@ -117,15 +139,23 @@ function Recipes() {
       </div>
       <div id="recipe-container">
         {recipes.map((recipe) => (
-          <RecipeCard
+          <RecipeSummaryCard
             key={recipe.id}
             recipe={recipe}
-            onRecipeUpdate={handleRecipeUpdate}
-            onRecipeDelete={handleRecipeDelete}
+            openRecipeModal={openRecipeModal}
+            // onClick={() => openRecipeModal(recipe)}
+            // onRecipeUpdate={handleRecipeUpdate}
+            // onRecipeDelete={handleRecipeDelete}
             // isFavorited={favoriteRecipes.includes(recipe.id)}
           />
         ))}
       </div>
+      {selectedRecipe && (
+        <RecipeModal
+          recipe={selectedRecipe}
+          onClose={closeRecipeModal}
+        />
+      )}
     </div>
   );
 }
