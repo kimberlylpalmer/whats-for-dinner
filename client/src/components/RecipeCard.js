@@ -4,7 +4,7 @@ import { useAuth } from "../components/AuthContext";
 import EditRecipeForm from "./EditRecipe";
 import { useNavigate } from "react-router-dom";
 
-function RecipeCard({ recipe, onRecipeUpdate, onRecipeDelete }) {
+function RecipeCard({ recipe, onRecipeUpdate, onRecipeDelete, onClose }) {
   const { user, authenticated } = useAuth();
   const isAuthor = user && recipe.author_id === user.id;
   const [isEditing, setIsEditing] = useState(false);
@@ -47,30 +47,31 @@ function RecipeCard({ recipe, onRecipeUpdate, onRecipeDelete }) {
     setIsEditing(false);
   };
 
-  const handleRecipeDelete = () => {
-    console.log("attempting to delete Recipe ID:", recipe.id);
-    fetch(`/api/recipes/${recipe.id}`, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error(
-            `Failed to delete recipe with status: ${response.status}`
-          );
-        }
-        return response.json();
-      })
-      .then(() => {
-        onRecipeDelete(recipe.id);
-      })
+  // const handleRecipeDelete = () => {
+  //   console.log("attempting to delete Recipe ID:", recipe.id);
+  //   fetch(`/api/recipes/${recipe.id}`, {
+  //     method: "DELETE",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //   })
+  //     .then((response) => {
+  //       if (!response.ok) {
+  //         throw new Error(
+  //           `Failed to delete recipe with status: ${response.status}`
+  //         );
+  //       }
+  //       return response.json();
+  //     })
+  //     .then(() => {
+  //       onRecipeDelete(recipe.id);
+  //     })
 
-      .catch((error) => {
-        console.error("Error deleting recipe:", error);
-      });
-  };
+  //     .catch((error) => {
+  //       console.error("Error deleting recipe:", error);
+  //     });
+  // };
+
 
   const toggleFavorite = () => {
     if (user) {
@@ -80,7 +81,6 @@ function RecipeCard({ recipe, onRecipeUpdate, onRecipeDelete }) {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          // "Authorization": `Bearer ${user.token}`, // Assuming you have a token for authorization
         },
         body: JSON.stringify({ recipe_id: recipe.id }),
       })
@@ -121,7 +121,8 @@ function RecipeCard({ recipe, onRecipeUpdate, onRecipeDelete }) {
         <EditRecipeForm
           recipe={recipe}
           onCancel={() => setIsEditing(false)}
-          onUpdate={handleRecipeUpdate}
+          onUpdate={onRecipeUpdate}
+          onClose={onClose}
         />
       ) : (
         <>
@@ -140,7 +141,7 @@ function RecipeCard({ recipe, onRecipeUpdate, onRecipeDelete }) {
             />
           </div>
             {/* <p>Meal Type: {recipe.meal_type_id}</p> */}
-            
+            <p>Meal Type: {getMealTypeName(recipe.meal_type_id)}</p>
           <p>Cooking Time: {recipe.cooking_time}</p>
           <p>Author: {recipe.author_username}</p>
           <div>
@@ -165,9 +166,8 @@ function RecipeCard({ recipe, onRecipeUpdate, onRecipeDelete }) {
 
           {isAuthor && (
             <>
-              <button className="button" onClick={handleRecipeDelete}>
-                Delete Recipe
-              </button>
+              <button className='button' onClick={() => onRecipeDelete(recipe.id)}>Delete Recipe</button>
+
               <button className="button" onClick={toggleEdit}>
                 Update Recipe
                 </button>

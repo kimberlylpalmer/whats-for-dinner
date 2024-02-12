@@ -6,7 +6,8 @@ body, h1, p {
 body {
   background-color: #F2D788; /* Light beige background */
   color: #262626; /* Almost black for text */
-  font-family: Arial, sans-serif;
+  /* font-family: Arial, sans-serif; */
+  font-family: Roboto, sans-serif;
 
   /* background-image: linear-gradient(45deg, #FEFBF3 25%, transparent 25%),
                     linear-gradient(-45deg, #FEFBF3 25%, transparent 25%),
@@ -17,14 +18,15 @@ body {
 }
 
 nav {
-  background-color: #394002; /* Dark green for the NavBar */
-  color: #F2D888; /* Light beige for NavBar text */
-  padding: 1rem;
+  background-color: #394002;
+  color: #F2D888;   
 }
 
 .navbar {
-    background-color: #333;
+    background-color: #262626;
     overflow: hidden;
+    margin-bottom: 5px;
+    border-radius: 8px;
 
   }
   
@@ -61,17 +63,62 @@ nav {
   }
 
   .button {
-    width: 100px;
+    width: 175px;
     background-color: #8c0303;;
     color: white;
     padding: 10px;
     margin: 10px;
-    border-radius: 10px;
+    border-radius: 8px;
     border: none;
     cursor: pointer;
     font-size: 16px;
+    box-shadow: 0 4px 8px rgba(0,0,0,1);
+  }
+
+  .card-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center align items horizontally */
+  }
+
+  .card-body > h2, .card-body > span, .recipe-info, .recipe-actions {
+    width: 100%; /* Ensure children take full width of the parent */
+    text-align: center; /* Center the text */
+    margin-bottom: 10px; /* Add some space between the elements */
+  }
+
+  .recipe-info {
+    display: flex;
+    justify-content: space-around; /* This will put meal type and author on the same row with space between them */
+  }
+
+  .recipe-actions {
+    display: flex;
+    flex-direction: row;
+    justify-content: center; /* Center the buttons horizontally */
+    gap: 10px; /* Creates space between buttons */
+    margin: 10px 15px; /* Adjust the 15px as needed for horizontal spacing */
+  }
+
+  .recipecardbutton {
+  }
+
+ 
+  .recipecardbutton {
+    width: 150px;
+    background-color: #8c0303;;
+    color: white;
+    padding: 0px;
+    margin: 10px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    box-shadow: 0 4px 8px rgba(0,0,0,1);
   }
   
+  
+
   .button:hover {
     background-color: #262626;
     color: #5A7302;
@@ -113,6 +160,7 @@ nav {
     color: #f2d888;
     padding: 20px;
     border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0,0,0,1);
   }
   
   .home-header {
@@ -125,6 +173,26 @@ nav {
   @keyframes blinkAnimation {
     0%, 100% {opacity: 1; }
     50% {opacity: 0;}
+  }
+
+  .userProfile {
+    background-color: #f9f9f9; /* Light grey background */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0,0,0,1); /* Subtle shadow */
+    padding: 20px; /* Spacing inside the container */
+    max-width: 400px; /* Max width to maintain readability */
+    margin: 20px auto; /* Centering the box */
+  }
+  
+  .userProfile h2 {
+    color: #394002; /* Darker text for the title */
+    margin-bottom: 15px; /* Space below the title */
+  }
+  
+  .userProfile p {
+    color: #262626; /* Lighter text color for information */
+    line-height: 1.5; /* Improved readability */
+    margin-bottom: 10px; /* Space between paragraphs */
   }
 
   /* RECIPES */
@@ -156,11 +224,17 @@ nav {
   padding: 20px; /* Adds some padding around the grid */
 }
 
+
 .card {
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    overflow: hidden;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  margin: 10px;
+  padding:10px;
+  overflow: hidden; /* Ensures that all content fits within the rounded corners */
 }
+
+
 
 .card img {
     width: 50%;
@@ -177,16 +251,63 @@ nav {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* optional, for shadow effect */
 }
 
+.modal-overlay {
+  position: fixed; /* Position it relative to the viewport */
+  top: 0; /* Full height */
+  left: 0; /* Full width */
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
+  display: flex;
+  justify-content: center; /* Center the child horizontally */
+  align-items: center; /* Center the child vertically */
+  z-index: 1000; /* Ensure it's above other content */
+  
+}
+
+.modal-content {
+  background-color: #F2D888; /* White background */
+  padding: 20px; /* Padding around the content */
+  border-radius: 10px; /* Rounded corners */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  max-width: 600px; /* Maximum width with a fixed value or percentage */
+  width: 90%; /* Responsive width */
+  position: relative; /* For positioning child elements like close button */
+  border: 10px solid blue;
+}
+
+.modal-content button {
+  background-color: #8c0303; /* Match your button color scheme */
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  border-radius: 5px; /* Slightly rounded corners for the button */
+  margin-top: 20px; /* Space above the close button */
+  border: 10px solid blue;
+}
+
+/* Style adjustments for mobile responsiveness */
+@media (max-width: 768px) {
+  .modal-content {
+    width: 95%; /* More width on smaller screens */
+    padding: 10px; /* Less padding on smaller screens */
+  }
+}
 
 
 .card h2 {
     padding: 10px;
+    border: 10px solid blue;
+    border-radius: 10px;
 }
 
 .card p,
 .card button {
     padding: 10px;
-    margin: 0;
+    margin-right: 10px;
+    margin-left: 10px;
 }
 
 
@@ -296,8 +417,10 @@ nav {
   padding: 20px; /* Some padding */
   border-radius: 5px; /* Rounded corners */
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* A subtle shadow */
-  width: 50%; /* Width of the modal */
-  max-width: 500px; /* Maximum width */
+  width: 75%; /* Width of the modal */
+  max-width: 90%; /* Maximum width */
+  max-height: 80vh;
+  overflow-y: auto;
 }
 
 /* Add a close button for the modal */

@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from "react";
-import RecipeCard from "../components/RecipeCard";
+// import RecipeCard from "../components/RecipeCard";
 import NavBar from "../components/NavBar";
 import { useNavigate } from "react-router-dom";
 import "../styles.css";
 import { useAuth } from "../components/AuthContext";
 import RecipeSummaryCard from "../components/RecipeSummaryCard"; // Corrected path
 import RecipeModal from "../components/RecipeModal"; // This is your full recipe modal component
-
-
 
 function Recipes() {
   const [recipes, setRecipes] = useState([]);
@@ -26,14 +24,16 @@ function Recipes() {
     navigate("/submit-recipe");
   };
 
+
   const handleRecipeUpdate = (updatedRecipe) => {
-    const updatedRecipes = recipes.map((recipe) => {
-      if (recipe.id === updatedRecipe.id) {
-        return updatedRecipe;
-      }
-      return recipe;
-    });
+    const updatedRecipes = recipes.map((recipe) =>
+      recipe.id === updatedRecipe.id ? updatedRecipe : recipe
+    );
     setRecipes(updatedRecipes);
+
+    if (selectedRecipe && selectedRecipe.id === updatedRecipe.id) {
+      setSelectedRecipe(updatedRecipe);
+    }
   };
 
   useEffect(() => {
@@ -42,7 +42,6 @@ function Recipes() {
       .then((data) => setMealTypes(data.meal_types || []))
       .catch((error) => console.error("Error fetching meal types:", error));
   }, []);
-  
 
   useEffect(() => {
     let endpoint = "api/recipes";
@@ -53,7 +52,9 @@ function Recipes() {
     }
 
     if (selectedMealTypeId) {
-      const selectedMealType = mealTypes.find(type => type.id === parseInt(selectedMealTypeId));
+      const selectedMealType = mealTypes.find(
+        (type) => type.id === parseInt(selectedMealTypeId)
+      );
       if (selectedMealType) {
         endpoint = `/api/recipes/mealtype/${selectedMealType.type}`;
       }
@@ -69,38 +70,59 @@ function Recipes() {
   }, [viewMode, selectedMealTypeId, mealTypes]);
 
   const handleRecipeDelete = (recipeId) => {
-    setRecipes((prevRecipes) =>
-      prevRecipes.filter((recipe) => recipe.id !== recipeId)
-    );
-  };
-  
-  const handleMealTypeChange = (e) => {
-    setSelectedMealTypeId(e.target.value);
-    setViewMode("all"); // Reset view mode to show all when filtering by meal type
+    const isConfirmed = window.confirm("Are you sure you want to delete the recipe?");
+
+    if (isConfirmed) {
+    console.log("attempting to delete Recipe ID:", recipeId);
+    fetch(`/api/recipes/${recipeId}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`Failed to delete recipe with status: ${response.status}`);
+        }
+        setRecipes(prevRecipes => prevRecipes.filter(recipe => recipe.id !== recipeId))
+
+      })
+
+
+      .catch((error) => {
+        console.error("Error deleting recipe:", error);
+      });}
   };
 
-// to open the modal
-  const openRecipeModal = recipe => {
+
+
+  const handleMealTypeChange = (e) => {
+    setSelectedMealTypeId(e.target.value);
+    setViewMode("all"); 
+  };
+
+  // to open the modal
+  const openRecipeModal = (recipe) => {
     setSelectedRecipe(recipe);
   };
 
   //To close modal
   const closeRecipeModal = () => {
-    setSelectedRecipe(null)
-  }
-
-  const toggleFavorite = (recipeId, isFavorited) => {
-    const updatedRecipes = recipes.map(recipe => {
-      if (recipe.id === recipeId) {
-        return { ...recipe, isFavorited: !isFavorited };
-      }
-      return recipe;
-    });
-    setRecipes(updatedRecipes);
+    setSelectedRecipe(null);
   };
 
-  console.log(selectedRecipe)
-  
+  // const toggleFavorite = (recipeId, isFavorited) => {
+  //   const updatedRecipes = recipes.map((recipe) => {
+  //     if (recipe.id === recipeId) {
+  //       return { ...recipe, isFavorited: !isFavorited };
+  //     }
+  //     return recipe;
+  //   });
+  //   setRecipes(updatedRecipes);
+  // };
+
+  console.log(selectedRecipe);
+
   return (
     <div>
       <header>
@@ -111,29 +133,29 @@ function Recipes() {
         <button className="button" onClick={handleNavigateToUser}>
           Back to User Page
         </button>
-        {user &&
-       <>
-        <button className="button" onClick={handleNavigateToRecipeForm}>
-          Add New Recipe
-        </button>
-       <button className="button" onClick={() => setViewMode("all")}>
-          Show All Recipes
-        </button>
-        <button className="button" onClick={() => setViewMode("favorites")}>
-          Show Favorites
-        </button>
-        <button className="button" onClick={() => setViewMode("authored")}>
-          My Recipes
-          </button>
-        </>
-        }
-        {/* <button className="button" onClick={handleNavigateToMealPlanner}>
-          Meal Planner
-        </button> */}
+        {user && (
+          <>
+            <button className="button" onClick={handleNavigateToRecipeForm}>
+              Add New Recipe
+            </button>
+            <button className="button" onClick={() => setViewMode("all")}>
+              Show All Recipes
+            </button>
+            <button className="button" onClick={() => setViewMode("favorites")}>
+              Show Favorites
+            </button>
+            <button className="button" onClick={() => setViewMode("authored")}>
+              My Recipes
+            </button>
+          </>
+        )}
+
         <select onChange={handleMealTypeChange} value={selectedMealTypeId}>
           <option value="">Filter by Meal Type</option>
           {mealTypes.map((type) => (
-            <option key={type.id} value={type.id}>{type.type}</option>
+            <option key={type.id} value={type.id}>
+              {type.type}
+            </option>
           ))}
         </select>
       </div>
@@ -143,10 +165,6 @@ function Recipes() {
             key={recipe.id}
             recipe={recipe}
             openRecipeModal={openRecipeModal}
-            // onClick={() => openRecipeModal(recipe)}
-            // onRecipeUpdate={handleRecipeUpdate}
-            // onRecipeDelete={handleRecipeDelete}
-            // isFavorited={favoriteRecipes.includes(recipe.id)}
           />
         ))}
       </div>
@@ -154,6 +172,8 @@ function Recipes() {
         <RecipeModal
           recipe={selectedRecipe}
           onClose={closeRecipeModal}
+          onRecipeUpdate={handleRecipeUpdate}
+          onRecipeDelete={handleRecipeDelete}
         />
       )}
     </div>

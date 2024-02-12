@@ -10,12 +10,12 @@ function NavBar() {
 
     return (
         <nav className="navbar">
-            <NavLink to="/" className="nav-link">Home</NavLink>
             {!authenticated && (
                 <>
-                    <NavLink to="/login" className="nav-link">Login</NavLink>
-                    <NavLink to="/signup" className="nav-link">Signup</NavLink>
-                    <NavLink to="/recipes" className="nav-link">View Recipes</NavLink>
+                    <NavLink to="/" className="nav-link button">Home</NavLink>
+                    <NavLink to="/login" className="nav-link button">Login</NavLink>
+                    <NavLink to="/signup" className="nav-link button">Signup</NavLink>
+                    <NavLink to="/recipes" className="nav-link button">View Recipes</NavLink>
                 </>
             )}
             {authenticated && <LogoutButton />}
