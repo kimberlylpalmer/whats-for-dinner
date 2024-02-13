@@ -1,4 +1,4 @@
-import React, { useEffect, useInsertionEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import "../styles.css";
 import NavBar from "../components/NavBar";
 import { useNavigate } from "react-router-dom";
@@ -140,24 +140,23 @@ function User() {
             <div className="rightColumn homeColumn">
               <p>Feast Your Eyes, Fuel Your Soul.</p>
             </div>
+
+            {/* Modal for Editing User Profile */}
             <div>
+              {/* <button className="button" onClick={() => navigate('/recipes')}>Delete Account</button>  */}
+            </div>
+            <div className="userProfile">
               <h2>User Profile</h2>
               <p>Username: {userData?.username}</p>
               <p>First Name: {userData?.first_name}</p>
               <p>Last Name: {userData?.last_name}</p>
               <p>Email: {userData?.email}</p>
-              <p>Contributed Recipes: </p>
               <p>Contributed Recipes: {authoredRecipesCount}</p>
               <button
                 className="button"
                 onClick={() => setIsEditing(!isEditing)}>
                 Edit User Profile
               </button>
-            </div>
-
-            {/* Modal for Editing User Profile */}
-            <div>
-              {/* <button className="button" onClick={() => navigate('/recipes')}>Delete Account</button>  */}
             </div>
           </div>
         </>

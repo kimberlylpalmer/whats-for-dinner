@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useFormik } from "formik";
 import { useAuth } from "./AuthContext";
 
-const EditRecipeForm = ({ recipe, onCancel, onUpdate }) => {
+const EditRecipeForm = ({ recipe, onCancel, onUpdate, onClose }) => {
   const { user } = useAuth();
   const [mealTypes, setMealTypes] = useState([]);
   const [editingIndex, setEditingIndex] = useState(null);
@@ -88,11 +88,20 @@ const EditRecipeForm = ({ recipe, onCancel, onUpdate }) => {
           }
           return response.json();
         })
-        .then((data) => {
-          console.log("Recipe updated:", data);
-          onUpdate(data);
+        .then((updatedRecipeData) => {
+          console.log("Recipe updated:", updatedRecipeData);
+          // Call the onUpdate function passed as a prop with the updated recipe data
+          onUpdate(updatedRecipeData);
+          // If you wanted to close the modal, you'd call onClose() here, but since you want to keep it open and just refresh the data, we skip it
+          // Optionally, you can call onCancel() if it's meant to reset form state or similar
           onCancel();
         })
+        // .then((data) => {
+        //   console.log("Recipe updated:", data);
+        //   onUpdate(data);
+        //   // onClose();
+          
+        // })
         .catch((error) => console.error("Error updating recipe:", error));
     },
   });

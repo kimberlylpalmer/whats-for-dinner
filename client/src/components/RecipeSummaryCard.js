@@ -93,23 +93,25 @@ function RecipeSummaryCard({ recipe, onToggleFavorite, openRecipeModal }) {
       />
       <div className="card-body">
         <h2>{recipe.title}   {isFavorited && <span style={{ color: 'red' }}>❤️</span>}</h2>
-        
-        {/* <p>Meal Type: {recipe.meal_type}</p> */}
-        {/* <p>Author: {recipe.author_username}</p> */}
-        
-        <button className='button' onClick={() => openRecipeModal(recipe)}>Open Recipe</button>
+        <div className="recipe-info">
+        <p>Meal Type: {getMealTypeName(recipe.meal_type_id)}</p>
+        <p>Author: {recipe.author_username}</p>
+        </div>
+        <div className="recipe-actions">
+        <button className='recipecardbutton' onClick={() => openRecipeModal(recipe)}>Open Recipe</button>
         {authenticated && (
           <button
-            className="button favorite-button"
+            className="recipecardbutton favorite-button"
             onClick={(e) => {
-              e.stopPropagation(); // Prevent the modal from opening
+              e.stopPropagation(); 
               toggleFavorite();
             }}
           >
             {isFavorited ? "❤️" : "♡ Favorite Me"}
           </button>
         )}
-      </div>
+        </div>
+        </div>
     </div>
   );
 }

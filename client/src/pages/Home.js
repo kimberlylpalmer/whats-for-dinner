@@ -3,10 +3,10 @@
 import React from "react";
 import "../styles.css"
 import NavBar from "../components/NavBar"
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 
 function Home() {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
     return (
       <>
