@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import NavBar from "../components/NavBar";
 import { useAuth } from "../components/AuthContext";
 
+
 export default function Login() {
   const [loginInfo, setLoginInfo] = useState({ username: "", password: "" });
   const { login } = useAuth();
@@ -44,30 +45,31 @@ export default function Login() {
       <header>
         <NavBar />
       </header>
+        <div className="titleContainer">
+          <h1 className="loginTitle">What's For Dinner?</h1>
+        </div>
       <div></div>
       <div className="loginMain">
-        <div className="logoContainer">logo container</div>
-        <div className="titleContainer">
-          <h1 className="loginTitle">What's For Dinner</h1>
-        </div>
         <form className="loginForm" onSubmit={handleSubmit}>
           <div className="loginPage">
-            <label htmlFor="username">Username: </label>
+            <label className='label' htmlFor="username">Username: </label>
             <input
               value={loginInfo.username}
               id="username"
               name="username"
               onChange={handleLoginChange}
+              className="input"
             />
           </div>
           <div className="loginPage">
-            <label htmlFor="password">Password: </label>
+            <label className='label' htmlFor="password">Password: </label>
             <input
               onChange={handleLoginChange}
               value={loginInfo.password}
               type="password"
               id="password"
               name="password"
+              className="input"
             />
           </div>
           {errorMessage && (

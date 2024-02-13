@@ -121,23 +121,23 @@ function User() {
       ) : (
         <>
           <main className="homeBackground">
-            <h1>Welcome {userData?.first_name}</h1>
+            <h1 className="WelcomeHeader" >Welcome {userData?.first_name}</h1>
           </main>
           <button className="button" onClick={() => navigate("/recipes")}>
             View Recipes
           </button>
           {/* <button className="button" onClick={() => navigate('/mealplanner')}>Meal Planning</button>  */}
           <div className="homeGridContainer">
-            <div className="leftColumn homeColumn">
+            <div className="leftColumn homeColumn WelcomeHeader ">
               <p>Turning Meal Planning from Chore to Cheer.</p>
             </div>
-            <main className="homeBackground">
+            <main className="homeBackground WelcomeHeader">
               <div>
-                <h1 className="home-header">WHAT'S FOR DINNER</h1>
+                <h1 className="home-header">WHAT'S FOR DINNER?</h1>
                 <div className="mainContent"></div>
               </div>
             </main>
-            <div className="rightColumn homeColumn">
+            <div className="rightColumn homeColumn WelcomeHeader">
               <p>Feast Your Eyes, Fuel Your Soul.</p>
             </div>
 

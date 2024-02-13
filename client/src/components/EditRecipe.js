@@ -199,7 +199,8 @@ const EditRecipeForm = ({ recipe, onCancel, onUpdate, onClose }) => {
         ))}
       </select>
       <br></br>
-      <p>space between here please</p>
+      <h3>Cooking Prep/Time:</h3>
+      
       <label htmlFor="cookingHours">Cooking Hours:</label>
       <input
         id="cookingHours"
@@ -217,9 +218,9 @@ const EditRecipeForm = ({ recipe, onCancel, onUpdate, onClose }) => {
         onChange={formik.handleChange}
         value={formik.values.cookingMinutes}
       />
-      <br></br>
+      <p></p>
       <label htmlFor="image_url" className="form-label">
-        Image URL
+        Image URL:
       </label>
       <input
         id="image_url"
@@ -235,12 +236,14 @@ const EditRecipeForm = ({ recipe, onCancel, onUpdate, onClose }) => {
       <div>
         <label htmlFor="ingredients">Ingredients:</label>
         {formik.values.ingredients.map((ingredient, index) => (
-          <div key={index}>
+          <div className="ingredient-row" key={index}>
+            <span className="ingredient-text">
             {editingIndex === index ? (
               // Editing mode for the current ingredient
               <>
                 <input
                   type="text"
+                  placeholder="Measurement"
                   value={ingredient.measurement}
                   onChange={(e) =>
                     handleIngredientChange(index, "measurement", e.target.value)
@@ -249,6 +252,7 @@ const EditRecipeForm = ({ recipe, onCancel, onUpdate, onClose }) => {
                   />
                 <input
                   type="text"
+                  placeholder="Ingredient Name"
                   value={ingredient.name}
                   onChange={(e) =>
                     handleIngredientChange(index, "name", e.target.value)
@@ -268,15 +272,17 @@ const EditRecipeForm = ({ recipe, onCancel, onUpdate, onClose }) => {
               <>
                 {`${ingredient.measurement}  ${ingredient.name}`}
                 <button
-                  type="button"
+                      type="button"
+                      className="edit-recipe-button"
                   onClick={() => toggleEditIngredient(index)}>
                   Edit
                 </button>
-                <button type="button" onClick={() => removeIngredient(index)}>
+                <button className="edit-recipe-button" type="button" onClick={() => removeIngredient(index)}>
                   X
                 </button>
               </>
             )}
+            </span>
           </div>
         ))}
         <button
@@ -302,7 +308,7 @@ const EditRecipeForm = ({ recipe, onCancel, onUpdate, onClose }) => {
         className="form-input"
       />
       <button type="submit" className="button">
-        Edit Recipe
+        Save
       </button>
       <button className="button" type="button" onClick={onCancel}>
         Cancel

@@ -1,13 +1,20 @@
+/* Global */
+.protest-riot-regular {
+  font-family: "Protest Riot", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
 body, h1, p {
     margin: 20;
     padding: 0;
+    font-family: 'Protest Riot', sans-serif;
 }
 
 body {
-  background-color: #F2D788; /* Light beige background */
-  color: #262626; /* Almost black for text */
-  /* font-family: Arial, sans-serif; */
-  font-family: Roboto, sans-serif;
+  background-color: #F2D788;
+  color: #262626;
+  font-family: , sans-serif;
 
   /* background-image: linear-gradient(45deg, #FEFBF3 25%, transparent 25%),
                     linear-gradient(-45deg, #FEFBF3 25%, transparent 25%),
@@ -17,25 +24,59 @@ body {
   background-position: 0 0, 0 20px, 20px -20px, -20px 0px; */
 }
 
+.label {
+  font-family: 'Protest Riot', sans-serif;
+  font-size: 20px;
+}
+
+.error {
+  font-family: 'Protest Riot', sans-serif;
+  font-size: 20px;
+  color: red; 
+}
+
+/* Icon in NavBar */
+.icon-image {
+  width: 5em;
+  height: 5em;
+  float: left;
+  background-color: #262626;
+}
+
 nav {
-  background-color: #394002;
+  background-color: #262626;
   color: #F2D888;   
 }
 
-.navbar {
-    background-color: #262626;
-    overflow: hidden;
-    margin-bottom: 5px;
-    border-radius: 8px;
 
-  }
-  
+.navbar {
+  display: flex;
+  background-color: #262626;
+  color: #F2D888;
+  overflow: hidden;
+  /* margin: 1 10px; */
+  border-radius: 8px;
+}
+
+.logoutButton {
+  font-family: 'Protest Riot';
+  display: block;
+  background-color: #8c0303;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+}
+
   .nav-link {
-    float: left;
-    display: block;
-    color: white;
-    text-align: center;
-    padding: 14px 16px;
+    /* float: left; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #F2D888;
+    /* text-align: center; */
+    padding: 10px 16px;
     text-decoration: none;
     border-radius: 5px;
     margin: 5px 20px;
@@ -45,59 +86,99 @@ nav {
   .nav-link.active {
     background-color: #5a7302;
   }
-  
-  .nav-link:hover {
-    background-color: #f2d888;
-    color: black;
+
+  .input {
+    background-color: #f0f0f0;
+    border: 1px solid #d3d3d3;
+    box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.2),
+                inset -2px -2px 5px rgba(255, 255, 255, 0.7);
+    padding: 16px;
+    margin: 16px 0;
+    width: calc(100% - 16px); 
+    outline: none; 
+    font-size: 20px;    
+}
+
+  input:focus {
+    outline: none;
+    box-shadow: inset 1px 1px 2px rgba(0,0,0,0.25),
+                inset -1px -1px 2px rgba(255, 255, 255, 0.8);
   }
-  
-  .logoutButton {
-    float: right;
-    display: block;
-    background-color: #8c0303;
-    text-align: center;
-    padding: 14px 16px;
-    text-decoration: none;
-    border: none;
-    cursor: pointer;
+
+  .inputdropdown {
+    background-color: #f0f0f0;
+    border: 1px solid #d3d3d3;
+    box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.2),
+                inset -2px -2px 5px rgba(255, 255, 255, 0.7);
+    padding: 16px;
+    margin: 16px 0;
+    width: calc(25% - 16px); 
+    outline: none; 
+    font-size: 18px;    
+    border-radius: 8px;
+    font-family: "Protest Riot";
+}
+
+  .loginMain, .signupMain {
+    display: grid;
+    place-items: center;    
   }
 
   .button {
     width: 175px;
     background-color: #8c0303;;
-    color: white;
+    color: #F2D888;
     padding: 10px;
     margin: 10px;
     border-radius: 8px;
     border: none;
     cursor: pointer;
-    font-size: 16px;
+    font-size: 18px;
     box-shadow: 0 4px 8px rgba(0,0,0,1);
+    font-family: 'Protest riot';
   }
+
+  /* USER PAGE */
+  .WelcomeHeader {
+    color: #F2D888;
+  text-shadow: 
+    -1px -1px 0 #000,  
+     1px -1px 0 #000,
+    -1px  1px 0 #000,
+     1px  2px 0 #000; /* Black text-shadow outline */
+  }
+
+  .userProfile {
+    font-size: 20px;
+  }
+
+
+  /* RECIPE CARDS */
 
   .card-body {
     display: flex;
     flex-direction: column;
-    align-items: center; /* Center align items horizontally */
+    align-items: center;
+    background-color: #FCF7E7;
   }
 
   .card-body > h2, .card-body > span, .recipe-info, .recipe-actions {
-    width: 100%; /* Ensure children take full width of the parent */
-    text-align: center; /* Center the text */
-    margin-bottom: 10px; /* Add some space between the elements */
+    width: 100%; 
+    text-align: center; 
+    margin-bottom: 10px; 
   }
 
   .recipe-info {
     display: flex;
-    justify-content: space-around; /* This will put meal type and author on the same row with space between them */
+    justify-content: space-around; 
   }
 
   .recipe-actions {
     display: flex;
     flex-direction: row;
-    justify-content: center; /* Center the buttons horizontally */
-    gap: 10px; /* Creates space between buttons */
-    margin: 10px 15px; /* Adjust the 15px as needed for horizontal spacing */
+    justify-content: center; 
+    gap: 10px; 
+    margin: 10px 15px; 
   }
 
   .recipecardbutton {
@@ -120,7 +201,7 @@ nav {
   
 
   .button:hover {
-    background-color: #262626;
+    background-color: #F2D888;
     color: #5A7302;
     border: 2px solid #262626
     /* border: 10px solid aqua; */
@@ -166,7 +247,7 @@ nav {
   .home-header {
     color: #f2d888;
     text-align: center;
-    font-size: 75px;
+    font-size: 65px;
     /* animation: blinkAnimation 3s linear infinite; */
   }
 
@@ -176,7 +257,7 @@ nav {
   }
 
   .userProfile {
-    background-color: #f9f9f9; /* Light grey background */
+    background-color: #FEFBF3; /* Light grey background */
     border-radius: 8px; /* Rounded corners */
     box-shadow: 0 4px 8px rgba(0,0,0,1); /* Subtle shadow */
     padding: 20px; /* Spacing inside the container */
@@ -185,14 +266,14 @@ nav {
   }
   
   .userProfile h2 {
-    color: #394002; /* Darker text for the title */
-    margin-bottom: 15px; /* Space below the title */
+    color: #394002; 
+    margin-bottom: 15px;
   }
   
   .userProfile p {
-    color: #262626; /* Lighter text color for information */
-    line-height: 1.5; /* Improved readability */
-    margin-bottom: 10px; /* Space between paragraphs */
+    color: #262626; 
+    line-height: 1.5; 
+    margin-bottom: 10px; 
   }
 
   /* RECIPES */
@@ -248,44 +329,42 @@ nav {
   overflow: hidden; /* ensures the image does not overflow the container */
   position: relative; /* positions the image within this container */
   border-radius: 8px; /* optional, for rounded corners */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* optional, for shadow effect */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); /* optional, for shadow effect */
 }
 
 .modal-overlay {
-  position: fixed; /* Position it relative to the viewport */
-  top: 0; /* Full height */
-  left: 0; /* Full width */
+  position: fixed; 
+  top: 0; 
+  left: 0; 
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
+  background-color: rgba(0, 0, 0, .8);
   display: flex;
-  justify-content: center; /* Center the child horizontally */
-  align-items: center; /* Center the child vertically */
-  z-index: 1000; /* Ensure it's above other content */
-  
+  justify-content: center;
+  align-items: center; 
+  z-index: 1000; 
 }
 
 .modal-content {
-  background-color: #F2D888; /* White background */
-  padding: 20px; /* Padding around the content */
-  border-radius: 10px; /* Rounded corners */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
-  max-width: 600px; /* Maximum width with a fixed value or percentage */
-  width: 90%; /* Responsive width */
-  position: relative; /* For positioning child elements like close button */
-  border: 10px solid blue;
+  background-color: #F2D888; 
+  padding: 20px; 
+  border-radius: 10px; 
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+  max-width: 600px; 
+  width: 90%; 
+  position: relative; 
+
 }
 
 .modal-content button {
-  background-color: #8c0303; /* Match your button color scheme */
+  background-color: #8c0303; 
   color: white;
   padding: 10px 20px;
   border: none;
   cursor: pointer;
   font-size: 16px;
-  border-radius: 5px; /* Slightly rounded corners for the button */
-  margin-top: 20px; /* Space above the close button */
-  border: 10px solid blue;
+  border-radius: 5px; 
+  margin-top: 20px; 
 }
 
 /* Style adjustments for mobile responsiveness */
@@ -299,8 +378,8 @@ nav {
 
 .card h2 {
     padding: 10px;
-    border: 10px solid blue;
     border-radius: 10px;
+    text-decoration: underline;
 }
 
 .card p,
@@ -312,41 +391,84 @@ nav {
 
 
 /* RecipeForm.css */
+
+.NewRecipeContainer {
+  /* border: 2px solid black; */
+  margin-left: 20px;
+}
+
 .form-container {
   max-width: 600px;
   margin: 20px auto;
   padding: 20px;
-  background: #f5f5f5;
+  background: #F2D888;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  border: solid black 2px
+  border: solid black 2px;
+  font-family: "Protest Riot";
 }
 
 .form-group{
   margin-bottom: 20px;
-  border: solid black 2px
+  border: solid black 2px;
+  font-family: "Protest Riot";
 }
 
 .form-label {
   display: block;
   margin-bottom: 5px;
-  font-weight: bold;
-  border: solid black 2px
+  font-weight: normal;
+  font-family: "Protest Riot";
+  /* border: solid black 2px */
 }
 
 .form-input {
-  width: 75%;
+  width: 50%;
   padding: 8px;
   border-radius: 4px;
   border: 1px solid black;
+  margin-bottom: 20px;
+  /* font-family: "Protest Riot"; */
 }
+
+.time-section {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-start !important; 
+  margin-bottom: 20px !important;
+  font-family: "Protest Riot"; 
+}
+
+.time-inputs {
+  display: flex !important;
+  flex-direction: row !important;
+  justify-content: flex-start !important;
+  gap: 20px !important;
+  font-family: "Protest Riot"; 
+}
+
+.time-input {
+  display: flex !important;
+  flex-direction: column !important;
+  font-family: "Protest Riot";
+}
+
+#measurement {
+  margin-right: 20px;
+}
+
+#ingredient-name {
+  margin-left: 20px;
+}
+
 
 
 .form-container label {
   display: block;
   margin-bottom: 5px;
   font-weight: bold;
-  border: solid black 2px
+  border: solid black 2px;
+  font-family: "Protest Riot";
 }
 
 .form-container input[type="text"],
@@ -436,4 +558,10 @@ nav {
 
 .close-modal-button:hover {
   background-color: #aaa; /* Darker grey on hover */
+}
+
+/* Edit Recipe Form */
+
+.edit-recipe-button {
+  font-family: "Protest Riot";
 }

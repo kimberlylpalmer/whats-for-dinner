@@ -4,6 +4,8 @@ import React from "react";
 import "../styles.css"
 import NavBar from "../components/NavBar"
 // import { useNavigate } from "react-router-dom";
+import RecipesPageBackground from '../assets/RecipesPageBackground.jpg';
+
 
 function Home() {
   // const navigate = useNavigate();
@@ -19,8 +21,10 @@ function Home() {
           </div>
           <main className="homeBackground">
             <div>
-              <h1 className="home-header">WHAT'S FOR DINNER?</h1>
             <div className="mainContent"></div>
+            </div>
+            <div>
+              <img src={RecipesPageBackground} />
             </div>
           </main>
           <div className="rightColumn homeColumn">

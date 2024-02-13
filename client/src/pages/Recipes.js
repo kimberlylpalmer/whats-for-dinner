@@ -150,7 +150,7 @@ function Recipes() {
           </>
         )}
 
-        <select onChange={handleMealTypeChange} value={selectedMealTypeId}>
+        <select className='inputdropdown' onChange={handleMealTypeChange} value={selectedMealTypeId}>
           <option value="">Filter by Meal Type</option>
           {mealTypes.map((type) => (
             <option key={type.id} value={type.id}>
