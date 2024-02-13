@@ -3,6 +3,7 @@ import { NavLink } from "react-router-dom";
 import { useAuth } from './AuthContext';
 import "../styles.css";
 import LogoutButton from './LogoutButton';
+import WFDIcon from '../assets/WFDIcon.png'
 
 function NavBar() {
     const { authenticated } = useAuth();
@@ -10,6 +11,7 @@ function NavBar() {
 
     return (
         <nav className="navbar">
+            <img className="icon-image" src={WFDIcon} />
             {!authenticated && (
                 <>
                     <NavLink to="/" className="nav-link button">Home</NavLink>
@@ -19,6 +21,8 @@ function NavBar() {
                 </>
             )}
             {authenticated && <LogoutButton />}
+            <div>
+            </div>
         </nav>
     );
 }

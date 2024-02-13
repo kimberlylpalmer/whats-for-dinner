@@ -98,10 +98,10 @@ function RecipeSummaryCard({ recipe, onToggleFavorite, openRecipeModal }) {
         <p>Author: {recipe.author_username}</p>
         </div>
         <div className="recipe-actions">
-        <button className='recipecardbutton' onClick={() => openRecipeModal(recipe)}>Open Recipe</button>
+        <button className='recipecardbutton button' onClick={() => openRecipeModal(recipe)}>Open Recipe</button>
         {authenticated && (
           <button
-            className="recipecardbutton favorite-button"
+            className="recipecardbutton favorite-button button"
             onClick={(e) => {
               e.stopPropagation(); 
               toggleFavorite();

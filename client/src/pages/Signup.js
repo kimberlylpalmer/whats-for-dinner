@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import NavBar from "../components/NavBar";
 import { useAuth } from '../components/AuthContext';
+import WFDIcon from '../assets/WFDIcon.png'
 
 export default function Signup() {
     const [loginInfo, setLoginInfo] = useState({
@@ -51,10 +52,10 @@ export default function Signup() {
 
     return (
         <main>
+            <header>
             <NavBar />
-            <div></div>
+            </header>
             <div className="signupMain">
-                <div className="logoContainer">Logo Container</div>
                 <div className="titleContainger">
                     <h1>What's For Dinner</h1>
                 </div>
@@ -66,6 +67,7 @@ export default function Signup() {
                             id="username"
                             name="username"
                             onChange={handleLoginChange}
+                            className="input"
                         />
                     </div>
                     <div className="input-constainer">
@@ -75,6 +77,7 @@ export default function Signup() {
                             id="first_name"
                             name="first_name"
                             onChange={handleLoginChange}
+                            className="input"
                         />
                         </div>
                     <div className="input-constainer">
@@ -84,6 +87,7 @@ export default function Signup() {
                             id="last_name"
                             name="last_name"
                             onChange={handleLoginChange}
+                            className="input"
                         />
                         </div>
                     <div className="input-constainer">
@@ -93,6 +97,7 @@ export default function Signup() {
                             id="email"
                             name="email"
                             onChange={handleLoginChange}
+                            className="input"
                         />
                     </div>
                     <div className="input-constainer">
@@ -103,6 +108,7 @@ export default function Signup() {
                             type="password"
                             id="password"
                             name="password"
+                            className="input"
                         />
                     <div>
                         <input className="button" type="submit" value="Signup" />
