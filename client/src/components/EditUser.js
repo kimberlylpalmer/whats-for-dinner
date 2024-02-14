@@ -25,30 +25,35 @@ function EditUserForm({ userData, onUpdateUser, onCancel }) {
     onUpdateUser(updatedUserData);
   };
 
+  
+
   return (
     <form onSubmit={handleSubmit}>
       <div>
-        <label>First Name</label>
+        <label>First Name: </label>
         <input
           type="text"
           value={firstName}
           onChange={(e) => setFirstName(e.target.value)}
+          className="form-input"
         />
       </div>
       <div>
-        <label>Last Name</label>
+        <label>Last Name: </label>
         <input
           type="text"
           value={lastName}
           onChange={(e) => setLastName(e.target.value)}
+          className="form-input"
         />
       </div>
       <div>
-        <label>Email</label>
+        <label>Email: </label>
         <input
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          className="form-input"
         />
       </div>
       <button type="submit" className='button'>Update Profile</button>
