@@ -38,6 +38,13 @@ const RecipeForm = () => {
     },
 
     onSubmit: (values) => {
+      //Fliter out blank ingredients
+      const filteredIngredients = values.ingredients.filter((ingredient, index) => {
+        // Keep all but the last ingredient OR any ingredient that is not blank
+        return index < values.ingredients.length - 1 || (ingredient.name.trim() && ingredient.measurement.trim());
+      });
+
+
       const { cookingHours, cookingMinutes, ...rest } = values;
       const cookingTime = `${cookingHours ? `${cookingHours} hour(s)` : ""} ${
         cookingMinutes ? `${cookingMinutes} minute(s)` : ""
@@ -51,6 +58,7 @@ const RecipeForm = () => {
       const recipeData = {
         ...rest,
         cooking_time: cookingTime,
+        ingredients: filteredIngredients, //filtered ingredients to remove blanks
         author_id: user.id,
       };
 
@@ -199,7 +207,7 @@ const RecipeForm = () => {
                 {ingredient.measurement} - {ingredient.name}
               </span>
               <button
-                className="button"
+                className="ingredient-button"
                 type="button"
                 onClick={() => removeIngredient(index)}>
                 X
@@ -208,7 +216,6 @@ const RecipeForm = () => {
           ))}
 
           <div>
-            <p>Please enter each ingredient on a new line. </p>
             <label
               htmlFor={`measurement-${formik.values.ingredients.length - 1}`}>
               Measurement:  
