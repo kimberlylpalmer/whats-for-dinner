@@ -5,6 +5,7 @@ import "../styles.css"
 import NavBar from "../components/NavBar"
 // import { useNavigate } from "react-router-dom";
 import RecipesPageBackground from '../assets/RecipesPageBackground.jpg';
+import Footer from "../components/Footer"
 
 
 function Home() {
@@ -34,6 +35,7 @@ function Home() {
             {/* <button className="button" onClick={() => navigate('/recipes')}>View Recipes</button>  */}
           </div>
         </div>
+        <Footer/>
       </>
     );
   }

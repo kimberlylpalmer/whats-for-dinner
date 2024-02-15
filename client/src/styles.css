@@ -234,17 +234,17 @@ nav {
     backgroud-color: #5a7302;
     padding: 20px;
     text-align: center;
-    border: 10px dotted black;
+    border: 10px dotted #394002;
     font-size: 30px;
     font-weight: bold;
     color: #5a7302;
     position: relative;
-    animation: blinkBorder 1s linear infinite;
+    animation: blinkWidth   1.5s linear infinite;
   }
 
-  @keyframes blinkBorder {
+  @keyframes blinkWidth   {
     0%, 100% {
-      border-color: black;
+      border-color: #394002;
     }
     50% {
       border-color: transparent;
@@ -520,66 +520,64 @@ nav {
   margin: auto;
 }
 
-/* Adjustments for specific inputs */
+
 #title {
-  /* Specific styles for the title input */
+  
 }
 
-#meal_type {
-  /* Specific styles for the meal type select box */
-}
+#meal_type {}
+  
 
 #cooking_time {
-  /* Specific styles for the cooking time input */
+  
 }
 
-#ingredients {
-  /* Styles for the ingredients textarea */
-  height: 100px; /* Adjust height as necessary */
+#ingredients { 
+  height: 100px; 
 }
 
 #directions {
-  /* Styles for the directions textarea */
-  height: 150px; /* Adjust height as necessary */
+  
+  height: 150px; 
 }
 
 .modal-overlay {
-  position: fixed; /* Full-screen overlay */
+  position: fixed; 
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5); /* Black background with opacity */
+  background-color: rgba(0, 0, 0, 0.5); 
   display: flex;
-  justify-content: center; /* Center the modal horizontally */
-  align-items: center; /* Center the modal vertically */
-  z-index: 1000; /* Ensure it sits above other content */
+  justify-content: center; 
+  align-items: center; 
+  z-index: 1000; 
 }
 
 .modal-content {
-  background-color: #fff; /* White background */
-  padding: 20px; /* Some padding */
-  border-radius: 5px; /* Rounded corners */
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* A subtle shadow */
-  width: 75%; /* Width of the modal */
-  max-width: 90%; /* Maximum width */
+  background-color: #fff; 
+  padding: 20px; 
+  border-radius: 5px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
+  width: 75%; 
+  max-width: 90%; 
   max-height: 80vh;
   overflow-y: auto;
 }
 
-/* Add a close button for the modal */
+
 .close-modal-button {
-  float: right; /* Position it to the right */
-  padding: 2px 5px; /* Small padding */
-  margin: -10px -10px 10px 10px; /* Positioning adjustments */
-  border: none; /* No border */
-  background-color: #8c0303; /* Light grey background */
-  cursor: pointer; /* Pointer cursor on hover */
+  float: right; 
+  padding: 2px 5px; 
+  margin: -10px -10px 10px 10px; 
+  border: none; 
+  background-color: #8c0303; 
+  cursor: pointer; 
   
 }
 
 .close-modal-button:hover {
-  background-color: #aaa; /* Darker grey on hover */
+  background-color: #aaa; 
 }
 
 /* Edit Recipe Form */
@@ -587,3 +585,13 @@ nav {
 .edit-recipe-button {
   font-family: "Protest Riot";
 }
+
+
+#footer {
+  display: flex;
+  color: #394002;
+  align-items: right;
+  gap: 10px;
+  /* border: 2px solid #262626; */
+}
+

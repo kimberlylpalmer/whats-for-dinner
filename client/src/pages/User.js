@@ -3,6 +3,7 @@ import "../styles.css";
 import NavBar from "../components/NavBar";
 import { useNavigate } from "react-router-dom";
 import EditUserForm from "../components/EditUser";
+import Footer from "../components/Footer";
 
 
 function User() {
@@ -161,6 +162,7 @@ function User() {
           </div>
         </>
       )}
+      <Footer/>
     </div>
   );
 }

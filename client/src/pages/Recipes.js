@@ -6,6 +6,7 @@ import "../styles.css";
 import { useAuth } from "../components/AuthContext";
 import RecipeSummaryCard from "../components/RecipeSummaryCard"; // Corrected path
 import RecipeModal from "../components/RecipeModal"; // This is your full recipe modal component
+import Footer from "../components/Footer"
 
 function Recipes() {
   const [recipes, setRecipes] = useState([]);
@@ -133,10 +134,18 @@ function Recipes() {
               }}>
               Show All Recipes
             </button>
-            <button className="button" onClick={() => setViewMode("favorites")}>
+            <button
+              className="button"
+              onClick={() => {
+                setViewMode("favorites")
+                setSelectedMealTypeId("");
+              }}>
               Show Favorites
             </button>
-            <button className="button" onClick={() => setViewMode("authored")}>
+            <button className="button" onClick={() => {
+              setViewMode("authored");
+              setSelectedMealTypeId("");
+            }}>
               My Recipes
             </button>
           </>
@@ -168,7 +177,9 @@ function Recipes() {
           onRecipeDelete={handleRecipeDelete}
         />
       )}
+      <Footer/>
     </div>
+    
   );
 }
 
