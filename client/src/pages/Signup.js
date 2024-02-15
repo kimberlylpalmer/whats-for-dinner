@@ -14,6 +14,7 @@ export default function Signup() {
         first_name: "",
         last_name: "",
     });
+    const [errorMsg, setErrorMsg] = useState(""); //Username exists
 
     const { login } = useAuth();
     const navigate = useNavigate();
@@ -24,6 +25,7 @@ export default function Signup() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        setErrorMsg("");
         console.log("Submitting signup data:", loginInfo);
         fetch("/api/signup", {
             method: "POST",
@@ -34,9 +36,12 @@ export default function Signup() {
         })
 
             .then((r) => {
-                console.log("Raw response from signup:", r); // Log the raw response
+                console.log("Raw response from signup:", r); 
                 if (!r.ok) {
-                    throw new Error("signup request failed");
+                    if (r.status === 409) { // Assuming 409 Conflict for existing username
+                        throw new Error("Username already exists. Please try another.");
+                    }
+                    throw new Error("Username already exists. Please try another.");
                 }
                 return r.json();
             })
@@ -47,6 +52,7 @@ export default function Signup() {
             })
             .catch((error) => {
                 console.error("Signup error:", error);
+                setErrorMsg(error.message);
             })
     };
 
@@ -56,9 +62,14 @@ export default function Signup() {
             <NavBar />
             </header>
             <div className="signupMain">
+
                 <div className="titleContainger">
                     <h1>What's For Dinner</h1>
                 </div>
+                <div>
+                {errorMsg && <div className="error">{errorMsg}</div>}
+                </div>
+                
                 <form className="loginForm" onSubmit={handleSubmit}>
                     <div className="input-container">
                         <label htmlFor='username'>Username: </label>

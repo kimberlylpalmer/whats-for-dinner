@@ -64,7 +64,7 @@ function Recipes() {
       .then((response) => response.json())
       .then((data) => {
         setRecipes(data);
-        console.log(data); // Log to see the fetched data
+        console.log(data); 
       })
       .catch((error) => console.error("Error fetching recipes:", error));
   }, [viewMode, selectedMealTypeId, mealTypes]);
@@ -85,10 +85,7 @@ function Recipes() {
           throw new Error(`Failed to delete recipe with status: ${response.status}`);
         }
         setRecipes(prevRecipes => prevRecipes.filter(recipe => recipe.id !== recipeId))
-
       })
-
-
       .catch((error) => {
         console.error("Error deleting recipe:", error);
       });}
@@ -111,16 +108,6 @@ function Recipes() {
     setSelectedRecipe(null);
   };
 
-  // const toggleFavorite = (recipeId, isFavorited) => {
-  //   const updatedRecipes = recipes.map((recipe) => {
-  //     if (recipe.id === recipeId) {
-  //       return { ...recipe, isFavorited: !isFavorited };
-  //     }
-  //     return recipe;
-  //   });
-  //   setRecipes(updatedRecipes);
-  // };
-
   console.log(selectedRecipe);
 
   return (
@@ -138,7 +125,12 @@ function Recipes() {
             <button className="button" onClick={handleNavigateToRecipeForm}>
               Add New Recipe
             </button>
-            <button className="button" onClick={() => setViewMode("all")}>
+            <button
+              className="button"
+              onClick={() => {
+                setViewMode("all");
+                setSelectedMealTypeId("");
+              }}>
               Show All Recipes
             </button>
             <button className="button" onClick={() => setViewMode("favorites")}>

@@ -15,3 +15,4 @@ class MealTypeEnum(Enum):
     BREADS = "Breads"
     SWEETS = "Desserts"
     DRINKS = "Drinks"
+    SAUCES = "Sauces"
