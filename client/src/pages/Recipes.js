@@ -133,10 +133,18 @@ function Recipes() {
               }}>
               Show All Recipes
             </button>
-            <button className="button" onClick={() => setViewMode("favorites")}>
+            <button
+              className="button"
+              onClick={() => {
+                setViewMode("favorites")
+                setSelectedMealTypeId("");
+              }}>
               Show Favorites
             </button>
-            <button className="button" onClick={() => setViewMode("authored")}>
+            <button className="button" onClick={() => {
+              setViewMode("authored");
+              setSelectedMealTypeId("");
+            }}>
               My Recipes
             </button>
           </>
