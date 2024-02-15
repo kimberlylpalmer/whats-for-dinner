@@ -5,6 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import NavBar from "../components/NavBar";
 import { useAuth } from '../components/AuthContext';
 import WFDIcon from '../assets/WFDIcon.png'
+import Footer from "../components/Footer"
 
 export default function Signup() {
     const [loginInfo, setLoginInfo] = useState({
@@ -129,6 +130,7 @@ export default function Signup() {
                 <p>Already have an account? <Link to="/login">Login</Link>
                 </p>
             </div>
+            <Footer/>
         </main>
     )
 }
