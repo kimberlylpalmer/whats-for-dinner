@@ -37,6 +37,7 @@ export default function Login() {
       .catch((e) => {
         console.error(e);
         setErrorMessage(e.message);
+        setLoginInfo({...loginInfo, password: ""})
       });
   };
 
@@ -84,7 +85,7 @@ export default function Login() {
           </div>
         </form>
         <p>
-          Don't have an account? <Link to="/sign_up">Sign up</Link>
+          Don't have an account? <Link to="/signup">Sign up</Link>
         </p>
       </div>
     </main>
